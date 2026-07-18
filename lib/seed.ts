@@ -89,7 +89,7 @@ export function buildSeed(): DB {
     entry(2, 7, "glucose", { value: 68, context: "fasting" }, T, "en",
       {
         note: "He skipped breakfast before his walk again",
-        flags: [{ severity: "urgent", reason: "Blood sugar 68 is low", advice: "Give juice or food now and recheck in 15 minutes. Tell the care team it happened." }],
+        flags: [{ severity: "urgent", reason: "Blood sugar 68 is low", advice: "Give juice or food now and recheck in 15 minutes." }],
       }),
     entry(2, 8, "blood_pressure", { systolic: 104, diastolic: 60, pulse: 84 }, T, "en",
       { flags: [{ severity: "watch", reason: "BP trending low since hydrochlorothiazide was started (baseline 107/58 in office)" }] }),
@@ -108,7 +108,7 @@ export function buildSeed(): DB {
       {
         note: "Casi se cae al levantarse de la cama, se agarró de la cómoda. No se golpeó.",
         noteEn: "He nearly fell getting up from bed and caught himself on the dresser. No injury.",
-        flags: [{ severity: "urgent", reason: "A near-fall was recorded (no injury)", advice: "Worth telling the care team. Have him sit at the edge of the bed for a moment before standing." }],
+        flags: [{ severity: "urgent", reason: "A near-fall was recorded (no injury)" }],
       }),
     entry(1, 20, "symptoms", { tags: ["dizziness", "fatigue"], severity: 6 }, T, "en",
       {

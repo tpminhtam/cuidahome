@@ -89,10 +89,11 @@ export default function ReportPage() {
       <div className="flex items-start justify-between gap-2">
         <div>
           <h1 className="font-bold text-lg leading-tight">Pre-visit report</h1>
-          <p className="text-[11px] text-muted">
-            {p.name} · DOB {p.dob}
-            {next && <> · visit: {fmtDay(next.ts)} — {next.provider}</>}
-          </p>
+          {next && (
+            <p className="text-[11px] text-muted">
+              Visit: {fmtDay(next.ts)} — {next.provider}
+            </p>
+          )}
         </div>
         <span className="text-2xl">🩺</span>
       </div>
@@ -103,7 +104,6 @@ export default function ReportPage() {
             📞 Worth telling the care team
           </p>
           <p className="text-sm leading-snug">{urgent[0].reason}</p>
-          {urgent[0].advice && <p className="text-xs text-muted mt-1">{urgent[0].advice}</p>}
         </section>
       )}
 
@@ -111,11 +111,9 @@ export default function ReportPage() {
         <button onClick={generate} disabled={busy} className="btn-primary flex-1 text-sm">
           {busy ? "Generating…" : report ? "↻ Regenerate" : "Generate report"}
         </button>
-        {report && (
-          <button onClick={() => window.print()} className="card px-3 text-sm font-semibold">
-            🖨 Print
-          </button>
-        )}
+        <button onClick={() => window.print()} className="card px-3 text-sm font-semibold">
+          🖨 Print
+        </button>
       </div>
       {err && <p className="card flag-urgent p-3 text-sm">{err}</p>}
 
@@ -123,13 +121,6 @@ export default function ReportPage() {
         <section className="card p-4" style={{ background: "var(--teal-soft)" }}>
           <p className="text-sm font-semibold leading-snug">{j.one_liner}</p>
         </section>
-      )}
-
-      {!j && (
-        <p className="text-xs text-muted leading-snug px-1">
-          The summary, vital trends, and the family&apos;s question appear when you generate — 48 hours
-          before a visit, CuidaHome runs this automatically.
-        </p>
       )}
 
       {j && (
@@ -176,8 +167,10 @@ export default function ReportPage() {
           <p className="no-print text-xs text-muted">
             🧳 Bring: this report (printed) + the <Link className="underline" href="/meds">medication list</Link>.
           </p>
+        </>
+      )}
 
-          <section className="no-print card p-4" style={{ borderColor: "var(--terra)", borderWidth: 2 }}>
+      <section className="no-print card p-4" style={{ borderColor: "var(--terra)", borderWidth: 2 }}>
             <p className="text-xs font-bold uppercase tracking-wide mb-1" style={{ color: "var(--terra)" }}>
               Send to the doctor's portal
             </p>
@@ -209,9 +202,7 @@ export default function ReportPage() {
                 {run.state === "error" && <p className="text-xs flag-urgent card p-2">{run.error}</p>}
               </div>
             )}
-          </section>
-        </>
-      )}
+      </section>
 
       <p className="text-[10px] text-muted leading-snug pt-1">
         {report && (

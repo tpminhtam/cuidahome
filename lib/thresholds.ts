@@ -21,13 +21,13 @@ export function evaluateFlags(
       flags.push({
         severity: "urgent",
         reason: `Blood pressure ${d.systolic}/${d.diastolic} is very high`,
-        advice: "Worth calling the care team now. If chest pain, trouble breathing, or confusion — call 911.",
+        advice: "If chest pain, trouble breathing, or confusion — call 911.",
       });
     else if (d.systolic <= t.bp.sysLow || d.diastolic <= t.bp.diaLow)
       flags.push({
         severity: "urgent",
         reason: `Blood pressure ${d.systolic}/${d.diastolic} is very low`,
-        advice: "Have him sit or lie down and take it slowly. Worth calling the care team today.",
+        advice: "Have him sit or lie down and take it slowly.",
       });
     else if (d.systolic <= t.bp.sysLow + 15)
       // silent tier — report-only trend signal
@@ -40,7 +40,7 @@ export function evaluateFlags(
       flags.push({
         severity: "urgent",
         reason: `Blood sugar ${d.value} is low`,
-        advice: "Give juice or food now and recheck in 15 minutes. Tell the care team it happened.",
+        advice: "Give juice or food now and recheck in 15 minutes.",
       });
     else if (d.value >= t.glucose.high)
       flags.push({
@@ -87,7 +87,7 @@ export function evaluateFlags(
       flags.push({
         severity: "urgent",
         reason: d.fall.injured ? "A fall with injury was recorded" : "A fall was recorded",
-        advice: "Worth telling the care team. He takes aspirin — watch for headache, drowsiness, or new confusion after any head bump.",
+        advice: "He takes aspirin — watch for headache, drowsiness, or new confusion after any head bump.",
       });
   }
 

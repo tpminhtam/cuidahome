@@ -27,6 +27,21 @@ export default function Home() {
         </Link>
       </section>
 
+      {/* quick log grid — first, per Tu's design */}
+      <section>
+        <p className="text-xs font-bold uppercase tracking-wide text-muted mb-2">
+          {es ? "Registro rápido" : "Quick log"}
+        </p>
+        <div className="grid grid-cols-3 gap-2">
+          {CATEGORIES.map((c) => (
+            <Link key={c.key} href={`/log/${c.key}`} className="card p-3 text-center hover:shadow-md transition-shadow">
+              <div className="text-2xl">{c.icon}</div>
+              <div className="text-[11px] font-semibold mt-1 leading-tight">{es ? c.labelEs : c.label}</div>
+            </Link>
+          ))}
+        </div>
+      </section>
+
       {/* next appointment */}
       {nextAppt && (
         <section className="card p-4">
@@ -69,21 +84,6 @@ export default function Home() {
           <span className="chip">{state.lessons.length}</span>
         </Link>
       )}
-
-      {/* quick log grid */}
-      <section>
-        <p className="text-xs font-bold uppercase tracking-wide text-muted mb-2">
-          {es ? "Registro rápido" : "Quick log"}
-        </p>
-        <div className="grid grid-cols-3 gap-2">
-          {CATEGORIES.map((c) => (
-            <Link key={c.key} href={`/log/${c.key}`} className="card p-3 text-center hover:shadow-md transition-shadow">
-              <div className="text-2xl">{c.icon}</div>
-              <div className="text-[11px] font-semibold mt-1 leading-tight">{es ? c.labelEs : c.label}</div>
-            </Link>
-          ))}
-        </div>
-      </section>
 
       <p className="text-center text-[10px] text-muted pt-1">
         {es
