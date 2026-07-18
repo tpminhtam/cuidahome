@@ -1,0 +1,924 @@
+{
+ "patient": {
+  "id": "p_howell",
+  "name": "Isreal Howell",
+  "dob": "1939-03-20",
+  "age": 87,
+  "photo": "👴🏽",
+  "conditions": [
+   "Early Alzheimer's dementia",
+   "Ischemic heart disease (heart attack 2019)",
+   "Hypertension",
+   "Type 2 diabetes (new)",
+   "High cholesterol",
+   "Anemia"
+  ],
+  "medications": [
+   {
+    "name": "Hydrochlorothiazide 25 mg",
+    "sig": "every morning",
+    "startedRecently": true
+   },
+   {
+    "name": "Metformin XR 500 mg",
+    "sig": "with dinner",
+    "startedRecently": true
+   },
+   {
+    "name": "Losartan 50 mg",
+    "sig": "daily"
+   },
+   {
+    "name": "Metoprolol succinate ER 100 mg",
+    "sig": "daily"
+   },
+   {
+    "name": "Atorvastatin 20 mg",
+    "sig": "at bedtime"
+   },
+   {
+    "name": "Aspirin 81 mg",
+    "sig": "daily"
+   },
+   {
+    "name": "Donepezil 5 mg",
+    "sig": "at bedtime"
+   },
+   {
+    "name": "Nitroglycerin spray",
+    "sig": "as needed for chest pain"
+   }
+  ],
+  "allergies": [
+   "No known drug allergies"
+  ],
+  "dietFlags": [
+   "Diabetic diet"
+  ],
+  "thresholds": {
+   "bp": {
+    "sysHigh": 180,
+    "sysLow": 90,
+    "diaHigh": 110,
+    "diaLow": 50
+   },
+   "glucose": {
+    "low": 70,
+    "high": 300
+   },
+   "weightGain": {
+    "lbs": 3,
+    "days": 2
+   }
+  },
+  "lastVisitNote": "Last PCP visit (10 days ago, Dr. Sarah Kim): started hydrochlorothiazide 25 mg for BP (office BP was 107/58 — told to monitor for orthostatic symptoms/dizziness) and metformin XR 500 mg for new type 2 diabetes (fasting glucose ran 66 — counseled not to skip breakfast before morning walks). Potassium 5.16 at upper margin on losartan; repeat labs due. Duplicate statin removed at medication reconciliation. Return sooner for chest pain, dizziness, or medication intolerance."
+ },
+ "users": [
+  {
+   "id": "u_maria",
+   "name": "María",
+   "relation": "Daughter · primary caregiver",
+   "role": "admin",
+   "lang": "es",
+   "avatar": "👩🏽"
+  },
+  {
+   "id": "u_tam",
+   "name": "Tam",
+   "relation": "Grandson",
+   "role": "caregiver",
+   "lang": "en",
+   "avatar": "🧑🏻"
+  },
+  {
+   "id": "u_rosa",
+   "name": "Rosa",
+   "relation": "Home aide (Tue/Thu)",
+   "role": "viewer",
+   "lang": "es",
+   "avatar": "👩🏻‍⚕️"
+  }
+ ],
+ "entries": [
+  {
+   "id": "e1",
+   "ts": "2026-07-08T15:00:00.000Z",
+   "createdAt": "2026-07-08T15:00:00.000Z",
+   "category": "blood_pressure",
+   "data": {
+    "systolic": 132,
+    "diastolic": 78,
+    "pulse": 72
+   },
+   "caregiverId": "u_tam",
+   "lang": "en",
+   "source": "seed",
+   "flags": []
+  },
+  {
+   "id": "e2",
+   "ts": "2026-07-09T03:00:00.000Z",
+   "createdAt": "2026-07-09T03:00:00.000Z",
+   "category": "weight",
+   "data": {
+    "value": 173.5
+   },
+   "caregiverId": "u_tam",
+   "lang": "en",
+   "source": "seed",
+   "flags": []
+  },
+  {
+   "id": "e3",
+   "ts": "2026-07-09T15:00:00.000Z",
+   "createdAt": "2026-07-09T15:00:00.000Z",
+   "category": "blood_pressure",
+   "data": {
+    "systolic": 128,
+    "diastolic": 74,
+    "pulse": 74
+   },
+   "caregiverId": "u_maria",
+   "lang": "es",
+   "source": "seed",
+   "flags": []
+  },
+  {
+   "id": "e4",
+   "ts": "2026-07-09T20:00:00.000Z",
+   "createdAt": "2026-07-09T20:00:00.000Z",
+   "category": "meals",
+   "data": {
+    "meal_type": "lunch",
+    "completion_pct": 100,
+    "description": "arroz con pollo"
+   },
+   "caregiverId": "u_maria",
+   "lang": "es",
+   "source": "seed",
+   "note": "Comió muy bien hoy",
+   "noteEn": "He ate very well today",
+   "flags": []
+  },
+  {
+   "id": "e5",
+   "ts": "2026-07-10T04:00:00.000Z",
+   "createdAt": "2026-07-10T04:00:00.000Z",
+   "category": "sleep",
+   "data": {
+    "duration_h": 7.5,
+    "quality": "restful"
+   },
+   "caregiverId": "u_maria",
+   "lang": "es",
+   "source": "seed",
+   "flags": []
+  },
+  {
+   "id": "e6",
+   "ts": "2026-07-10T01:00:00.000Z",
+   "createdAt": "2026-07-10T01:00:00.000Z",
+   "category": "activity",
+   "data": {
+    "ambulation_minutes": 30
+   },
+   "caregiverId": "u_tam",
+   "lang": "en",
+   "source": "seed",
+   "note": "Full loop around the block, steady",
+   "flags": []
+  },
+  {
+   "id": "e7",
+   "ts": "2026-07-10T14:00:00.000Z",
+   "createdAt": "2026-07-10T14:00:00.000Z",
+   "category": "glucose",
+   "data": {
+    "value": 92,
+    "context": "fasting"
+   },
+   "caregiverId": "u_tam",
+   "lang": "en",
+   "source": "seed",
+   "flags": []
+  },
+  {
+   "id": "e8",
+   "ts": "2026-07-10T15:00:00.000Z",
+   "createdAt": "2026-07-10T15:00:00.000Z",
+   "category": "blood_pressure",
+   "data": {
+    "systolic": 124,
+    "diastolic": 72,
+    "pulse": 70
+   },
+   "caregiverId": "u_tam",
+   "lang": "en",
+   "source": "seed",
+   "flags": []
+  },
+  {
+   "id": "e9",
+   "ts": "2026-07-10T21:00:00.000Z",
+   "createdAt": "2026-07-10T21:00:00.000Z",
+   "category": "bowel",
+   "data": {
+    "count": 1,
+    "consistency": "formed"
+   },
+   "caregiverId": "u_maria",
+   "lang": "es",
+   "source": "seed",
+   "flags": []
+  },
+  {
+   "id": "e10",
+   "ts": "2026-07-11T03:00:00.000Z",
+   "createdAt": "2026-07-11T03:00:00.000Z",
+   "category": "mood",
+   "data": {
+    "score": 4
+   },
+   "caregiverId": "u_maria",
+   "lang": "es",
+   "source": "seed",
+   "flags": []
+  },
+  {
+   "id": "e11",
+   "ts": "2026-07-11T15:00:00.000Z",
+   "createdAt": "2026-07-11T15:00:00.000Z",
+   "category": "blood_pressure",
+   "data": {
+    "systolic": 118,
+    "diastolic": 70,
+    "pulse": 76
+   },
+   "caregiverId": "u_maria",
+   "lang": "es",
+   "source": "seed",
+   "flags": []
+  },
+  {
+   "id": "e12",
+   "ts": "2026-07-12T03:00:00.000Z",
+   "createdAt": "2026-07-12T03:00:00.000Z",
+   "category": "weight",
+   "data": {
+    "value": 172.8
+   },
+   "caregiverId": "u_tam",
+   "lang": "en",
+   "source": "seed",
+   "flags": []
+  },
+  {
+   "id": "e13",
+   "ts": "2026-07-12T05:00:00.000Z",
+   "createdAt": "2026-07-12T05:00:00.000Z",
+   "category": "sleep",
+   "data": {
+    "duration_h": 6,
+    "quality": "restless",
+    "issues": [
+     "nighttime awakenings"
+    ]
+   },
+   "caregiverId": "u_maria",
+   "lang": "es",
+   "source": "seed",
+   "note": "Se despertó dos veces, un poco desorientado",
+   "noteEn": "He woke up twice, a little disoriented",
+   "flags": []
+  },
+  {
+   "id": "e14",
+   "ts": "2026-07-12T15:00:00.000Z",
+   "createdAt": "2026-07-12T15:00:00.000Z",
+   "category": "blood_pressure",
+   "data": {
+    "systolic": 114,
+    "diastolic": 68,
+    "pulse": 78
+   },
+   "caregiverId": "u_tam",
+   "lang": "en",
+   "source": "seed",
+   "flags": []
+  },
+  {
+   "id": "e15",
+   "ts": "2026-07-13T01:00:00.000Z",
+   "createdAt": "2026-07-13T01:00:00.000Z",
+   "category": "activity",
+   "data": {
+    "ambulation_minutes": 20
+   },
+   "caregiverId": "u_tam",
+   "lang": "en",
+   "source": "seed",
+   "flags": []
+  },
+  {
+   "id": "e16",
+   "ts": "2026-07-13T02:00:00.000Z",
+   "createdAt": "2026-07-13T02:00:00.000Z",
+   "category": "meals",
+   "data": {
+    "meal_type": "dinner",
+    "completion_pct": 75
+   },
+   "caregiverId": "u_maria",
+   "lang": "es",
+   "source": "seed",
+   "flags": []
+  },
+  {
+   "id": "e17",
+   "ts": "2026-07-13T03:00:00.000Z",
+   "createdAt": "2026-07-13T03:00:00.000Z",
+   "category": "mood",
+   "data": {
+    "score": 4
+   },
+   "caregiverId": "u_tam",
+   "lang": "en",
+   "source": "seed",
+   "flags": []
+  },
+  {
+   "id": "e18",
+   "ts": "2026-07-13T14:00:00.000Z",
+   "createdAt": "2026-07-13T14:00:00.000Z",
+   "category": "glucose",
+   "data": {
+    "value": 88,
+    "context": "fasting"
+   },
+   "caregiverId": "u_tam",
+   "lang": "en",
+   "source": "seed",
+   "flags": []
+  },
+  {
+   "id": "e19",
+   "ts": "2026-07-13T15:00:00.000Z",
+   "createdAt": "2026-07-13T15:00:00.000Z",
+   "category": "blood_pressure",
+   "data": {
+    "systolic": 112,
+    "diastolic": 66,
+    "pulse": 74
+   },
+   "caregiverId": "u_maria",
+   "lang": "es",
+   "source": "seed",
+   "flags": []
+  },
+  {
+   "id": "e20",
+   "ts": "2026-07-13T18:00:00.000Z",
+   "createdAt": "2026-07-13T18:00:00.000Z",
+   "category": "symptoms",
+   "data": {
+    "tags": [
+     "pain"
+    ],
+    "severity": 5,
+    "location": "right knee",
+    "prn_med": "acetaminophen 500 mg",
+    "prn_times": 2
+   },
+   "caregiverId": "u_tam",
+   "lang": "en",
+   "source": "seed",
+   "note": "Knee sore after gardening, Tylenol twice today",
+   "flags": []
+  },
+  {
+   "id": "e21",
+   "ts": "2026-07-14T04:00:00.000Z",
+   "createdAt": "2026-07-14T04:00:00.000Z",
+   "category": "sleep",
+   "data": {
+    "duration_h": 7,
+    "quality": "restful",
+    "nap_minutes": 60
+   },
+   "caregiverId": "u_maria",
+   "lang": "es",
+   "source": "seed",
+   "flags": []
+  },
+  {
+   "id": "e22",
+   "ts": "2026-07-14T15:00:00.000Z",
+   "createdAt": "2026-07-14T15:00:00.000Z",
+   "category": "blood_pressure",
+   "data": {
+    "systolic": 108,
+    "diastolic": 64,
+    "pulse": 80
+   },
+   "caregiverId": "u_tam",
+   "lang": "en",
+   "source": "seed",
+   "flags": []
+  },
+  {
+   "id": "e23",
+   "ts": "2026-07-14T20:00:00.000Z",
+   "createdAt": "2026-07-14T20:00:00.000Z",
+   "category": "meals",
+   "data": {
+    "meal_type": "lunch",
+    "completion_pct": 50,
+    "issues": [
+     "coughing with thin liquids"
+    ]
+   },
+   "caregiverId": "u_maria",
+   "lang": "es",
+   "source": "seed",
+   "note": "Tosió mucho al tomar la sopa",
+   "noteEn": "He coughed a lot drinking the soup",
+   "flags": []
+  },
+  {
+   "id": "e24",
+   "ts": "2026-07-15T03:00:00.000Z",
+   "createdAt": "2026-07-15T03:00:00.000Z",
+   "category": "weight",
+   "data": {
+    "value": 172.4
+   },
+   "caregiverId": "u_tam",
+   "lang": "en",
+   "source": "seed",
+   "flags": []
+  },
+  {
+   "id": "e25",
+   "ts": "2026-07-15T03:00:00.000Z",
+   "createdAt": "2026-07-15T03:00:00.000Z",
+   "category": "mood",
+   "data": {
+    "score": 3
+   },
+   "caregiverId": "u_maria",
+   "lang": "es",
+   "source": "seed",
+   "flags": []
+  },
+  {
+   "id": "e26",
+   "ts": "2026-07-15T15:00:00.000Z",
+   "createdAt": "2026-07-15T15:00:00.000Z",
+   "category": "blood_pressure",
+   "data": {
+    "systolic": 106,
+    "diastolic": 62,
+    "pulse": 82
+   },
+   "caregiverId": "u_maria",
+   "lang": "es",
+   "source": "seed",
+   "flags": []
+  },
+  {
+   "id": "e27",
+   "ts": "2026-07-15T16:00:00.000Z",
+   "createdAt": "2026-07-15T16:00:00.000Z",
+   "category": "symptoms",
+   "data": {
+    "tags": [
+     "dizziness"
+    ],
+    "severity": 4
+   },
+   "caregiverId": "u_maria",
+   "lang": "es",
+   "source": "seed",
+   "note": "Se mareó al levantarse del sillón después del desayuno",
+   "noteEn": "He got dizzy standing up from the armchair after breakfast",
+   "flags": [
+    {
+     "severity": "watch",
+     "reason": "Dizziness — monitor orthostatic symptoms flagged at last visit (new HCTZ)"
+    }
+   ]
+  },
+  {
+   "id": "e28",
+   "ts": "2026-07-15T22:00:00.000Z",
+   "createdAt": "2026-07-15T22:00:00.000Z",
+   "category": "bowel",
+   "data": {
+    "count": 0,
+    "consistency": "constipated"
+   },
+   "caregiverId": "u_maria",
+   "lang": "es",
+   "source": "seed",
+   "flags": []
+  },
+  {
+   "id": "e29",
+   "ts": "2026-07-16T01:00:00.000Z",
+   "createdAt": "2026-07-16T01:00:00.000Z",
+   "category": "activity",
+   "data": {
+    "ambulation_minutes": 10
+   },
+   "caregiverId": "u_tam",
+   "lang": "en",
+   "source": "seed",
+   "note": "Cut the walk short, said he felt woozy",
+   "flags": []
+  },
+  {
+   "id": "e30",
+   "ts": "2026-07-16T14:00:00.000Z",
+   "createdAt": "2026-07-16T14:00:00.000Z",
+   "category": "glucose",
+   "data": {
+    "value": 68,
+    "context": "fasting"
+   },
+   "caregiverId": "u_tam",
+   "lang": "en",
+   "source": "seed",
+   "note": "He skipped breakfast before his walk again",
+   "flags": [
+    {
+     "severity": "urgent",
+     "reason": "Blood sugar 68 is low",
+     "advice": "Give juice or food now and recheck in 15 minutes. Tell the care team it happened."
+    }
+   ]
+  },
+  {
+   "id": "e31",
+   "ts": "2026-07-16T15:00:00.000Z",
+   "createdAt": "2026-07-16T15:00:00.000Z",
+   "category": "blood_pressure",
+   "data": {
+    "systolic": 104,
+    "diastolic": 60,
+    "pulse": 84
+   },
+   "caregiverId": "u_tam",
+   "lang": "en",
+   "source": "seed",
+   "flags": [
+    {
+     "severity": "watch",
+     "reason": "BP trending low since hydrochlorothiazide was started (baseline 107/58 in office)"
+    }
+   ]
+  },
+  {
+   "id": "e32",
+   "ts": "2026-07-17T05:00:00.000Z",
+   "createdAt": "2026-07-17T05:00:00.000Z",
+   "category": "sleep",
+   "data": {
+    "duration_h": 5,
+    "quality": "very_poor",
+    "issues": [
+     "confusion",
+     "wandering"
+    ]
+   },
+   "caregiverId": "u_maria",
+   "lang": "es",
+   "source": "seed",
+   "note": "Lo encontré en la cocina a las 2 de la mañana, confundido, buscando sus llaves",
+   "noteEn": "I found him in the kitchen at 2 AM, confused, looking for his keys",
+   "flags": [
+    {
+     "severity": "watch",
+     "reason": "Nighttime wandering with confusion — new this week"
+    }
+   ]
+  },
+  {
+   "id": "e33",
+   "ts": "2026-07-17T03:00:00.000Z",
+   "createdAt": "2026-07-17T03:00:00.000Z",
+   "category": "mood",
+   "data": {
+    "score": 2,
+    "behaviors": [
+     "withdrawal",
+     "frustration"
+    ]
+   },
+   "caregiverId": "u_maria",
+   "lang": "es",
+   "source": "seed",
+   "note": "Más callado, se frustra cuando no encuentra las palabras",
+   "noteEn": "Quieter, gets frustrated when he can't find words",
+   "flags": []
+  },
+  {
+   "id": "e34",
+   "ts": "2026-07-17T15:00:00.000Z",
+   "createdAt": "2026-07-17T15:00:00.000Z",
+   "category": "blood_pressure",
+   "data": {
+    "systolic": 100,
+    "diastolic": 58,
+    "pulse": 86
+   },
+   "caregiverId": "u_maria",
+   "lang": "es",
+   "source": "seed",
+   "flags": [
+    {
+     "severity": "watch",
+     "reason": "BP trending low since hydrochlorothiazide was started"
+    }
+   ]
+  },
+  {
+   "id": "e35",
+   "ts": "2026-07-18T02:00:00.000Z",
+   "createdAt": "2026-07-18T02:00:00.000Z",
+   "category": "activity",
+   "data": {
+    "ambulation_minutes": 0,
+    "fall": {
+     "occurred": true,
+     "injured": false,
+     "description": "Nearly fell getting up from bed; caught himself on the dresser"
+    }
+   },
+   "caregiverId": "u_maria",
+   "lang": "es",
+   "source": "seed",
+   "note": "Casi se cae al levantarse de la cama, se agarró de la cómoda. No se golpeó.",
+   "noteEn": "He nearly fell getting up from bed and caught himself on the dresser. No injury.",
+   "flags": [
+    {
+     "severity": "urgent",
+     "reason": "A near-fall was recorded (no injury)",
+     "advice": "Worth telling the care team. Have him sit at the edge of the bed for a moment before standing."
+    }
+   ]
+  },
+  {
+   "id": "e36",
+   "ts": "2026-07-18T03:00:00.000Z",
+   "createdAt": "2026-07-18T03:00:00.000Z",
+   "category": "symptoms",
+   "data": {
+    "tags": [
+     "dizziness",
+     "fatigue"
+    ],
+    "severity": 6
+   },
+   "caregiverId": "u_tam",
+   "lang": "en",
+   "source": "seed",
+   "note": "Dizzy again tonight when he stood up, held the wall",
+   "flags": [
+    {
+     "severity": "watch",
+     "reason": "Recurrent orthostatic dizziness — 3rd episode this week"
+    }
+   ]
+  },
+  {
+   "id": "e37",
+   "ts": "2026-07-17T20:00:00.000Z",
+   "createdAt": "2026-07-17T20:00:00.000Z",
+   "category": "meals",
+   "data": {
+    "meal_type": "lunch",
+    "completion_pct": 50
+   },
+   "caregiverId": "u_maria",
+   "lang": "es",
+   "source": "seed",
+   "note": "Poco apetito",
+   "noteEn": "Little appetite",
+   "flags": []
+  },
+  {
+   "id": "e38",
+   "ts": "2026-07-18T03:00:00.000Z",
+   "createdAt": "2026-07-18T03:00:00.000Z",
+   "category": "weight",
+   "data": {
+    "value": 171.9
+   },
+   "caregiverId": "u_tam",
+   "lang": "en",
+   "source": "seed",
+   "flags": []
+  },
+  {
+   "id": "e39",
+   "ts": "2026-07-18T15:00:00.000Z",
+   "createdAt": "2026-07-18T15:00:00.000Z",
+   "category": "blood_pressure",
+   "data": {
+    "systolic": 98,
+    "diastolic": 56,
+    "pulse": 88
+   },
+   "caregiverId": "u_maria",
+   "lang": "es",
+   "source": "seed",
+   "flags": [
+    {
+     "severity": "watch",
+     "reason": "BP 98/56 — lowest reading since HCTZ started"
+    }
+   ]
+  },
+  {
+   "id": "e40",
+   "ts": "2026-07-18T16:00:00.000Z",
+   "createdAt": "2026-07-18T16:00:00.000Z",
+   "category": "symptoms",
+   "data": {
+    "tags": [
+     "dizziness"
+    ],
+    "severity": 5
+   },
+   "caregiverId": "u_maria",
+   "lang": "es",
+   "source": "seed",
+   "note": "Otra vez mareado al levantarse del desayuno",
+   "noteEn": "Dizzy again standing up from breakfast",
+   "flags": [
+    {
+     "severity": "watch",
+     "reason": "Recurrent orthostatic dizziness"
+    }
+   ]
+  },
+  {
+   "id": "e41",
+   "ts": "2026-07-18T19:00:00.000Z",
+   "createdAt": "2026-07-18T19:00:00.000Z",
+   "category": "glucose",
+   "data": {
+    "value": 84,
+    "context": "before_meal"
+   },
+   "caregiverId": "u_tam",
+   "lang": "en",
+   "source": "seed",
+   "flags": []
+  },
+  {
+   "id": "e42",
+   "ts": "2026-07-18T20:00:00.000Z",
+   "createdAt": "2026-07-18T20:00:00.000Z",
+   "category": "mood",
+   "data": {
+    "score": 3
+   },
+   "caregiverId": "u_maria",
+   "lang": "es",
+   "source": "seed",
+   "flags": []
+  }
+ ],
+ "messages": [
+  {
+   "id": "m1",
+   "ts": "2026-07-16T15:00:00.000Z",
+   "fromId": "u_maria",
+   "lang": "es",
+   "text": "Papá amaneció mareado otra vez. Le tomé la presión: 104/60. Estoy anotando todo en la app.",
+   "pinned": false,
+   "translations": {
+    "en": "Dad woke up dizzy again. I took his blood pressure: 104/60. I'm writing everything down in the app.",
+    "zh": "爸爸今早醒来又头晕了。我给他量了血压：104/60。我正在把所有情况记录到应用里。"
+   }
+  },
+  {
+   "id": "m2",
+   "ts": "2026-07-16T16:00:00.000Z",
+   "fromId": "u_tam",
+   "lang": "en",
+   "text": "That's the 2nd time this week. I'll check his BP again tonight after dinner.",
+   "pinned": false,
+   "translations": {
+    "es": "Es la segunda vez esta semana. Le volveré a revisar la presión arterial esta noche después de la cena.",
+    "zh": "这是本周第二次了。今晚晚饭后我会再帮他量一次血压。"
+   }
+  },
+  {
+   "id": "m3",
+   "ts": "2026-07-18T03:00:00.000Z",
+   "fromId": "u_maria",
+   "lang": "es",
+   "text": "Casi se cae esta noche al levantarse de la cama 😢 No se golpeó, pero tenemos que contárselo a la Dra. Kim en la cita.",
+   "pinned": false,
+   "translations": {
+    "en": "He almost fell tonight when getting up from bed 😢 He didn't hit himself, but we have to tell Dr. Kim at the appointment.",
+    "zh": "今晚他从床上起来时差点摔倒 😢 他没有撞到，但我们得在预约时告诉Kim医生。"
+   }
+  },
+  {
+   "id": "m4",
+   "ts": "2026-07-18T04:00:00.000Z",
+   "fromId": "u_tam",
+   "lang": "en",
+   "text": "I logged it. The app already flagged it for the visit — the pre-visit report will show the BP trend. I can drive us there.",
+   "pinned": false,
+   "translations": {
+    "es": "Lo registré. La aplicación ya lo marcó para la visita — el informe previo a la cita mostrará la tendencia de la presión arterial. Yo puedo llevarnos.",
+    "zh": "我已经记录了。应用程序已经把它标记出来准备就诊时用了——就诊前报告会显示血压趋势。我可以开车带我们过去。"
+   }
+  },
+  {
+   "id": "m5",
+   "ts": "2026-07-09T17:00:00.000Z",
+   "fromId": "u_maria",
+   "lang": "es",
+   "text": "📌 Lista de medicamentos actualizada después de la cita. Las pastillas nuevas (presión y azúcar) están en el pastillero azul.",
+   "pinned": true,
+   "translations": {
+    "en": "📌 Medication list updated after the appointment. The new pills (blood pressure and sugar) are in the blue pill organizer.",
+    "zh": "📌 就诊后更新的药物清单。新的药片（血压和血糖）放在蓝色药盒里。"
+   }
+  }
+ ],
+ "appointments": [
+  {
+   "id": "a_last",
+   "ts": "2026-07-08T17:00:00.000Z",
+   "provider": "Dr. Sarah Kim",
+   "specialty": "Primary Care",
+   "location": "Bayview Health Medical Group",
+   "type": "primary_care",
+   "completed": true,
+   "visitSummary": "Started HCTZ 25 mg + metformin XR 500 mg. Monitor dizziness. Labs due at next visit."
+  },
+  {
+   "id": "a_next",
+   "ts": "2026-07-20T17:00:00.000Z",
+   "provider": "Dr. Sarah Kim",
+   "specialty": "Primary Care",
+   "location": "Bayview Health Medical Group",
+   "type": "primary_care",
+   "notes": "Bring BP log · ask about dizziness since new pill · flu shot?"
+  },
+  {
+   "id": "a_lab",
+   "ts": "2026-07-19T15:00:00.000Z",
+   "provider": "Bayview Lab",
+   "specialty": "Blood draw (BMP, potassium)",
+   "location": "Bayview Health — 2nd floor",
+   "type": "lab",
+   "notes": "Fasting OK to skip — not a lipid panel"
+  }
+ ],
+ "reports": [
+  {
+   "id": "r_mrqsudtnx8b6lx",
+   "appointmentId": "a_next",
+   "generatedAt": "2026-07-18T20:08:20.603Z",
+   "periodStart": "2026-07-08T17:00:00.000Z",
+   "periodEnd": "2026-07-18T20:08:20.603Z",
+   "json": {
+    "one_liner": "BP fell from 128/74 to 98/56 over 10 days; weight down 1.6 lb; near-fall and nighttime wandering recorded.",
+    "symptoms_line": "Dizziness 3x (7/15,7/18); near-fall 7/18; knee pain 7/13; nighttime confusion/wandering 7/17.",
+    "vitals": {
+     "blood_pressure": {
+      "summary": "128/74 to 98/56 over 10 readings",
+      "trend": "falling"
+     },
+     "weight": {
+      "summary": "173.5 to 171.9 lb, down 1.6 lb",
+      "trend": "falling"
+     },
+     "glucose": {
+      "summary": "Fasting 68-92; low of 68 on 7/16",
+      "trend": "stable"
+     }
+    },
+    "question_for_doctor": "Should we adjust or stop the hydrochlorothiazide given the dizziness and low BP?"
+   }
+  }
+ ],
+ "portalOutbox": [
+  {
+   "id": "pm_mrqt1stoc4es28",
+   "ts": "2026-07-18T20:14:06.636Z",
+   "to": "Dr. Sarah Kim — Primary Care",
+   "subject": "Pre-visit summary — Isreal Howell (DOB 1939-03-20)",
+   "body": "PRE-VISIT SUMMARY (caregiver home observations via CuidaHome)\n\nBP fell from 128/74 to 98/56 over 10 days; weight down 1.6 lb; near-fall and nighttime wandering recorded.\n\nVITALS — BP: 128/74 to 98/56 over 10 readings | Weight: 173.5 to 171.9 lb, down 1.6 lb | Glucose: Fasting 68-92; low of 68 on 7/16\nSYMPTOMS — Dizziness 3x (7/15,7/18); near-fall 7/18; knee pain 7/13; nighttime confusion/wandering 7/17.\n\nQUESTION — Should we adjust or stop the hydrochlorothiazide given the dizziness and low BP?\n\nSent by Maria Alvarez (daughter, caregiver proxy). Full log with trend charts in CuidaHome.",
+   "from": "Maria Alvarez (caregiver proxy)"
+  }
+ ],
+ "portalRuns": []
+}
