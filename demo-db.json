@@ -796,23 +796,23 @@
    "ts": "2026-07-16T15:00:00.000Z",
    "fromId": "u_maria",
    "lang": "es",
-   "text": "Papá amaneció mareado otra vez. Le tomé la presión: 104/60. Estoy anotando todo en la app.",
+   "text": "Papá amaneció mareado. Presión 104/60 — ya lo anoté en la app.",
    "pinned": false,
    "translations": {
-    "en": "Dad woke up dizzy again. I took his blood pressure: 104/60. I'm writing everything down in the app.",
-    "zh": "爸爸今天早上起来又头晕了。我给他量了血压：104/60。我正在把所有情况都记录在应用程序里。"
+    "en": "Dad woke up dizzy. Blood pressure 104/60 — I already logged it in the app.",
+    "zh": "爸爸早上起来头晕。血压104/60——我已经记录在应用里了。"
    }
   },
   {
    "id": "m2",
-   "ts": "2026-07-16T16:00:00.000Z",
+   "ts": "2026-07-16T20:00:00.000Z",
    "fromId": "u_tam",
    "lang": "en",
-   "text": "That's the 2nd time this week. I'll check his BP again tonight after dinner.",
+   "text": "Heading to class — Rosa takes over at 2pm. She knows about the new BP pill. 🤝",
    "pinned": false,
    "translations": {
-    "es": "Es la segunda vez esta semana. Le volveré a revisar la presión arterial esta noche después de la cena.",
-    "zh": "这是本周第二次了。今晚晚饭后我会再帮他测一次血压。"
+    "es": "Voy camino a clase — Rosa toma el relevo a las 2pm. Ella sabe sobre la nueva pastilla para la presión. 🤝",
+    "zh": "去上课了——罗莎下午2点接班。她知道新的降血压药的事。🤝"
    }
   },
   {
@@ -820,11 +820,11 @@
    "ts": "2026-07-18T03:00:00.000Z",
    "fromId": "u_maria",
    "lang": "es",
-   "text": "Casi se cae esta noche al levantarse de la cama 😢 No se golpeó, pero tenemos que contárselo a la Dra. Kim en la cita.",
+   "text": "Casi se cae al levantarse 😢 No se golpeó. Hay que decírselo a la Dra. Kim.",
    "pinned": false,
    "translations": {
-    "en": "He almost fell tonight when getting up from the bed 😢 He didn't hit himself, but we have to tell Dr. Kim at the appointment.",
-    "zh": "今晚他起床时差点摔倒 😢 他没有碰伤，但我们得在预约就诊时告诉Kim医生。"
+    "en": "He almost fell when getting up 😢 He didn't hit himself. We need to tell Dr. Kim about it.",
+    "zh": "起身时差点摔倒 😢 没有磕碰到。得告诉Kim医生。"
    }
   },
   {
@@ -832,11 +832,11 @@
    "ts": "2026-07-18T04:00:00.000Z",
    "fromId": "u_tam",
    "lang": "en",
-   "text": "I logged it. The app already flagged it for the visit — the pre-visit report will show the BP trend. I can drive us there.",
+   "text": "I've got him tomorrow morning — will check BP after breakfast and log it.",
    "pinned": false,
    "translations": {
-    "es": "Lo registré. La aplicación ya lo marcó para la visita — el informe previo a la visita mostrará la tendencia de la presión arterial. Yo puedo llevarnos.",
-    "zh": "我记录下来了。应用程序已经为这次就诊标记了——就诊前报告会显示血压趋势。我可以开车送我们过去。"
+    "es": "Lo tengo a mi cargo mañana por la mañana — le revisaré la presión arterial después del desayuno y la registraré.",
+    "zh": "明天早上我来照顾他——早餐后会测血压并记录下来。"
    }
   },
   {
@@ -844,11 +844,11 @@
    "ts": "2026-07-09T17:00:00.000Z",
    "fromId": "u_maria",
    "lang": "es",
-   "text": "📌 Lista de medicamentos actualizada después de la cita. Las pastillas nuevas (presión y azúcar) están en el pastillero azul.",
+   "text": "📌 Lista de medicamentos actualizada. Las pastillas nuevas están en el pastillero azul.",
    "pinned": true,
    "translations": {
-    "en": "📌 Updated medication list after the appointment. The new pills (blood pressure and sugar) are in the blue pill organizer.",
-    "zh": "📌 就诊后更新的药物清单。新药（血压和血糖）放在蓝色药盒里。"
+    "en": "📌 Updated medication list. The new pills are in the blue pillbox.",
+    "zh": "📌 药物清单已更新。新药片放在蓝色药盒里。"
    }
   }
  ],
@@ -884,39 +884,39 @@
  ],
  "reports": [
   {
-   "id": "r_mrqtks9w4hyvgw",
+   "id": "r_mrqtyuybem8crt",
    "appointmentId": "a_next",
-   "generatedAt": "2026-07-18T20:28:52.388Z",
+   "generatedAt": "2026-07-18T20:39:49.043Z",
    "periodStart": "2026-07-08T17:00:00.000Z",
-   "periodEnd": "2026-07-18T20:28:52.388Z",
+   "periodEnd": "2026-07-18T20:39:49.043Z",
    "json": {
-    "one_liner": "BP fell from 128/74 to 98/56 over 10 days; weight -1.6 lb; near-fall and nighttime wandering recorded.",
-    "symptoms_line": "Dizziness x3 (7/15,7/18); knee pain 7/13; near-fall 7/18; wandering/confusion 7/17.",
+    "one_liner": "BP fell from 128/74 to 98/56; weight down 1.6 lb; fasting glucose 68 recorded; near-fall on 07-18.",
+    "symptoms_line": "Dizziness 07-15, 07-18 (x2); knee pain 07-13; nighttime confusion/wandering 07-17; near-fall 07-18.",
     "vitals": {
      "blood_pressure": {
-      "summary": "10 readings, 128/74 down to 98/56",
+      "summary": "128/74 to 98/56 over 10 readings",
       "trend": "falling"
      },
      "weight": {
-      "summary": "173.5 to 171.9 lb, -1.6 over period",
+      "summary": "173.5 to 171.9 lb, -1.6 lb",
       "trend": "falling"
      },
      "glucose": {
-      "summary": "4 readings, range 68-92; fasting 68 on 7/16",
+      "summary": "Fasting 68–92; before-meal 84",
       "trend": "falling"
      }
     },
-    "question_for_doctor": "Should we adjust the hydrochlorothiazide given the low BP and dizziness?"
+    "question_for_doctor": "Should we adjust the hydrochlorothiazide given the dizziness and low BP readings?"
    }
   }
  ],
  "portalOutbox": [
   {
-   "id": "pm_mrqtlbe7uggzfb",
-   "ts": "2026-07-18T20:29:17.167Z",
+   "id": "pm_mrqtzes4sm9ak6",
+   "ts": "2026-07-18T20:40:14.740Z",
    "to": "Dr. Sarah Kim — Primary Care",
    "subject": "Pre-visit summary — Isreal Howell (DOB 1939-03-20)",
-   "body": "PRE-VISIT SUMMARY (caregiver home observations via CuidaHome)\n\nBP fell from 128/74 to 98/56 over 10 days; weight -1.6 lb; near-fall and nighttime wandering recorded.\n\nVITALS — BP: 10 readings, 128/74 down to 98/56 | Weight: 173.5 to 171.9 lb, -1.6 over period | Glucose: 4 readings, range 68-92; fasting 68 on 7/16\nSYMPTOMS — Dizziness x3 (7/15,7/18); knee pain 7/13; near-fall 7/18; wandering/confusion 7/17.\n\nQUESTION — Should we adjust the hydrochlorothiazide given the low BP and dizziness?\n\nSent by Maria Alvarez (daughter, caregiver proxy). Full log with trend charts in CuidaHome.",
+   "body": "PRE-VISIT SUMMARY (caregiver home observations via CuidaHome)\n\nBP fell from 128/74 to 98/56; weight down 1.6 lb; fasting glucose 68 recorded; near-fall on 07-18.\n\nVITALS — BP: 128/74 to 98/56 over 10 readings | Weight: 173.5 to 171.9 lb, -1.6 lb | Glucose: Fasting 68–92; before-meal 84\nSYMPTOMS — Dizziness 07-15, 07-18 (x2); knee pain 07-13; nighttime confusion/wandering 07-17; near-fall 07-18.\n\nQUESTION — Should we adjust the hydrochlorothiazide given the dizziness and low BP readings?\n\nSent by Maria Alvarez (daughter, caregiver proxy). Full log with trend charts in CuidaHome.",
    "from": "Maria Alvarez (caregiver proxy)"
   }
  ],
