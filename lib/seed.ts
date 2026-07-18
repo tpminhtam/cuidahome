@@ -173,12 +173,13 @@ export function buildSeed(): DB {
       { id: "u_rosa", name: "Rosa", relation: "Home aide (Tue/Thu)", role: "viewer", lang: "es", avatar: "👩🏻‍⚕️" },
     ],
     entries,
+    // Short, scannable bubbles (Dr.'s request): BP + fall kept, two simple handoffs.
     messages: [
-      { id: "m1", ts: d(2, 8), fromId: "u_maria", lang: "es", text: "Papá amaneció mareado otra vez. Le tomé la presión: 104/60. Estoy anotando todo en la app.", pinned: false },
-      { id: "m2", ts: d(2, 9), fromId: "u_tam", lang: "en", text: "That's the 2nd time this week. I'll check his BP again tonight after dinner.", pinned: false },
-      { id: "m3", ts: d(1, 20), fromId: "u_maria", lang: "es", text: "Casi se cae esta noche al levantarse de la cama 😢 No se golpeó, pero tenemos que contárselo a la Dra. Kim en la cita.", pinned: false },
-      { id: "m4", ts: d(1, 21), fromId: "u_tam", lang: "en", text: "I logged it. The app already flagged it for the visit — the pre-visit report will show the BP trend. I can drive us there.", pinned: false },
-      { id: "m5", ts: d(9, 10), fromId: "u_maria", lang: "es", text: "📌 Lista de medicamentos actualizada después de la cita. Las pastillas nuevas (presión y azúcar) están en el pastillero azul.", pinned: true },
+      { id: "m1", ts: d(2, 8), fromId: "u_maria", lang: "es", text: "Papá amaneció mareado. Presión 104/60 — ya lo anoté en la app.", pinned: false },
+      { id: "m2", ts: d(2, 13), fromId: "u_tam", lang: "en", text: "Heading to class — Rosa takes over at 2pm. She knows about the new BP pill. 🤝", pinned: false },
+      { id: "m3", ts: d(1, 20), fromId: "u_maria", lang: "es", text: "Casi se cae al levantarse 😢 No se golpeó. Hay que decírselo a la Dra. Kim.", pinned: false },
+      { id: "m4", ts: d(1, 21), fromId: "u_tam", lang: "en", text: "I've got him tomorrow morning — will check BP after breakfast and log it.", pinned: false },
+      { id: "m5", ts: d(9, 10), fromId: "u_maria", lang: "es", text: "📌 Lista de medicamentos actualizada. Las pastillas nuevas están en el pastillero azul.", pinned: true },
     ],
     appointments: [
       {

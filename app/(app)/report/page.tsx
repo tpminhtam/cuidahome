@@ -19,15 +19,13 @@ export default function ReportPage() {
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/api/report`)
-      .then((r) => (r.ok ? r.json() : null))
-      .then((d) => d && setFetched(d.report))
-      .catch(() => {});
     return () => { if (pollRef.current) clearInterval(pollRef.current); };
   }, []);
 
-  // static preview falls back to the report bundled in the sample snapshot
-  const report = fetched ?? state?.reports[state.reports.length - 1] ?? null;
+  // Dr.'s design: the report (summary, trends, symptoms, question) stays hidden
+  // until "Generate" is pressed — the reveal happens live. The static preview
+  // shows the bundled sample report instead (it can't generate).
+  const report = demoMode ? state?.reports[state.reports.length - 1] ?? null : fetched;
 
   if (!state || !user) return <p className="text-muted text-sm p-6 text-center">Loading…</p>;
   const p = state.patient;
@@ -127,6 +125,14 @@ export default function ReportPage() {
         </section>
       )}
 
+      {!j && (
+        <p className="text-xs text-muted leading-snug px-1">
+          The summary, vital trends, and the family&apos;s question appear when you generate — 48 hours
+          before a visit, CuidaHome runs this automatically.
+        </p>
+      )}
+
+      {j && (
       <section className="card p-4">
         <p className="text-xs font-bold uppercase tracking-wide text-muted mb-2">Trends since last visit</p>
         <div className="space-y-3">
@@ -153,6 +159,7 @@ export default function ReportPage() {
           </div>
         </div>
       </section>
+      )}
 
       {j && (
         <>
