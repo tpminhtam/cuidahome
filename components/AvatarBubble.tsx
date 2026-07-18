@@ -24,14 +24,27 @@ export default function AvatarBubble({
   const canvasRef = useRef<HTMLCanvasElement>(null); // visible, cropped
   const bboxRef = useRef<{ x: number; y: number; w: number; h: number } | null>(null);
 
+  // idle pose: a calm, mouth-closed moment near the end of the clip
+  // (probed frames: duration−0.8s = hands folded, neutral smile, cleanest matte)
+  const IDLE_FROM_END = 0.8;
+
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
+    const goIdle = () => {
+      video.pause();
+      if (video.duration && isFinite(video.duration)) {
+        video.currentTime = Math.max(0, video.duration - IDLE_FROM_END);
+      }
+    };
     if (speaking) {
       video.currentTime = 0;
       video.play().catch(() => {});
+    } else if (video.readyState >= 1) {
+      goIdle();
     } else {
-      video.pause();
+      video.addEventListener("loadedmetadata", goIdle, { once: true });
+      return () => video.removeEventListener("loadedmetadata", goIdle);
     }
   }, [speaking]);
 
@@ -100,14 +113,16 @@ export default function AvatarBubble({
                 const mimg = maskCtx.createImageData(mw, mh);
                 for (let i = 0; i < mw * mh; i++) {
                   const c = invert ? 1 - data[i] : data[i];
-                  // feathered edge: smooth ramp between 0.35 and 0.75 confidence
-                  const a = c <= 0.35 ? 0 : c >= 0.75 ? 1 : (c - 0.35) / 0.4;
+                  // tight matte: ramp between 0.55 and 0.9 confidence (kills halo pixels)
+                  const a = c <= 0.55 ? 0 : c >= 0.9 ? 1 : (c - 0.55) / 0.35;
                   mimg.data[i * 4 + 3] = Math.round(a * 255);
                 }
                 maskCtx.putImageData(mimg, 0, 0);
                 workCtx.globalCompositeOperation = "destination-in";
                 workCtx.imageSmoothingEnabled = true;
+                workCtx.filter = "blur(1.2px)"; // soft, clean edge
                 workCtx.drawImage(maskCanvas, 0, 0, w, h);
+                workCtx.filter = "none";
                 workCtx.globalCompositeOperation = "source-over";
                 res.close();
               }
