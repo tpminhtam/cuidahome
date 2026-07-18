@@ -1,5 +1,7 @@
 # CuidaHome 🏡
 
+**Live UI preview:** https://tpminhtam.github.io/cuidahome/ *(static demo with sample data — the AI agents below run in the full app)*
+
 **The care log that talks to the doctor.** Family caregivers speak for 30 seconds — CuidaHome structures the observations, watches for red flags, generates the physician-ready pre-visit summary, and then **sends it through the patient portal itself, with a computer-use agent.**
 
 Built in one day at *The Future of Agentic AI in Healthcare* (Abridge × Anthropic × Lightspeed, Jul 18 2026), from a product spec written by a practicing geriatrician (On Lok PACE, dementia care) — this is the tool she wants for her own patients' families.

@@ -42,3 +42,5 @@ next-env.d.ts
 
 # demo data
 data/db.json
+public/demo-db.json
+.api-stash/

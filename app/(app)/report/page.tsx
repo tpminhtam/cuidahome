@@ -8,18 +8,26 @@ import { AgentStep, BPData, GlucoseData, Report, WeightData } from "@/lib/types"
 
 // Clinical document: ALWAYS English, and at most 1/3 of a printed page —
 // one-liner, one flag, vital trends, one symptoms line, ONE question.
+const DEMO_NOTE = "This shared preview shows the interface with sample data — the AI agents (report generation, portal delivery) run in the full app.";
+
 export default function ReportPage() {
-  const { state, user } = useApp();
-  const [report, setReport] = useState<Report | null>(null);
+  const { state, user, demoMode } = useApp();
+  const [fetched, setFetched] = useState<Report | null>(null);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const [run, setRun] = useState<{ state: string; steps: AgentStep[]; error?: string } | null>(null);
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
-    fetch("/api/report").then((r) => r.json()).then((d) => setReport(d.report));
+    fetch(`${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/api/report`)
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => d && setFetched(d.report))
+      .catch(() => {});
     return () => { if (pollRef.current) clearInterval(pollRef.current); };
   }, []);
+
+  // static preview falls back to the report bundled in the sample snapshot
+  const report = fetched ?? state?.reports[state.reports.length - 1] ?? null;
 
   if (!state || !user) return <p className="text-muted text-sm p-6 text-center">Loading…</p>;
   const p = state.patient;
@@ -40,21 +48,33 @@ export default function ReportPage() {
   const glPts = asc.filter((e) => e.category === "glucose").map((e) => ({ ts: e.ts, v: (e.data as GlucoseData).value, flagged: e.flags.length > 0 }));
 
   async function generate() {
+    if (demoMode) {
+      setErr(DEMO_NOTE);
+      return;
+    }
     setBusy(true);
     setErr(null);
-    const res = await fetch("/api/report", { method: "POST" });
-    const d = await res.json();
-    if (!res.ok) setErr(d.message ?? "Generation failed");
-    else setReport(d.report);
+    try {
+      const res = await fetch("/api/report", { method: "POST" });
+      const d = await res.json();
+      if (!res.ok) setErr(d.message ?? "Generation failed");
+      else setFetched(d.report);
+    } catch {
+      setErr(DEMO_NOTE);
+    }
     setBusy(false);
   }
 
   async function sendToPortal() {
+    if (demoMode) {
+      setRun({ state: "error", steps: [], error: DEMO_NOTE });
+      return;
+    }
     setRun({ state: "running", steps: [] });
-    const res = await fetch("/api/portal-agent", { method: "POST" });
-    if (!res.ok) {
-      const d = await res.json().catch(() => ({}));
-      setRun({ state: "error", steps: [], error: d.message ?? "Could not start the agent" });
+    const res = await fetch("/api/portal-agent", { method: "POST" }).catch(() => null);
+    if (!res || !res.ok) {
+      const d = res ? await res.json().catch(() => ({})) : {};
+      setRun({ state: "error", steps: [], error: (d as { message?: string }).message ?? DEMO_NOTE });
       return;
     }
     pollRef.current = setInterval(async () => {

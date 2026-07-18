@@ -30,11 +30,15 @@ export default function NewPortalMessage() {
       return;
     }
     setSending(true);
-    await fetch("/api/portal/send", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ to, subject, body, from: "Maria Alvarez (caregiver proxy)" }),
-    });
+    try {
+      await fetch("/api/portal/send", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ to, subject, body, from: "Maria Alvarez (caregiver proxy)" }),
+      });
+    } catch {
+      /* static preview — nothing to store */
+    }
     router.push("/portal/messages");
   }
 

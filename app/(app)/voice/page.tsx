@@ -34,7 +34,7 @@ type Turn =
   | { kind: "flags"; flags: Flag[] };
 
 export default function VoicePage() {
-  const { state, user, refresh } = useApp();
+  const { state, user, refresh, demoMode } = useApp();
   const [lang, setLang] = useState<Lang | null>(null);
   const [recording, setRecording] = useState(false);
   const [interim, setInterim] = useState("");
@@ -71,6 +71,11 @@ export default function VoicePage() {
 
   async function send(text: string) {
     if (!text.trim() || !user) return;
+    if (demoMode) {
+      setTurns((t) => [...t, { kind: "user", text }]);
+      setErr("This shared preview shows the interface with sample data — the voice agent runs in the full app.");
+      return;
+    }
     setErr(null);
     setBusy(true);
     setTurns((t) => [...t, { kind: "user", text }]);

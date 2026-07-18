@@ -20,11 +20,14 @@ interface Ctx {
   setUserId: (id: string) => void;
   uiLang: "en" | "es";
   setUiLang: (l: "en" | "es") => void;
+  demoMode: boolean; // static preview (GitHub Pages): sample data, AI features off
 }
+
+export const BASE = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
 const AppCtx = createContext<Ctx>({
   state: null, refresh: async () => {}, user: null, setUserId: () => {},
-  uiLang: "en", setUiLang: () => {},
+  uiLang: "en", setUiLang: () => {}, demoMode: false,
 });
 
 export function AppProvider({ children }: { children: React.ReactNode }) {
@@ -32,10 +35,28 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [userId, setUserIdRaw] = useState<string>("u_maria");
   // App is English-first; language is an explicit setting, never inferred (Dr.'s feedback #1)
   const [uiLang, setUiLangRaw] = useState<"en" | "es">("en");
+  const [demoMode, setDemoMode] = useState(false);
 
   const refresh = useCallback(async () => {
-    const res = await fetch("/api/state", { cache: "no-store" });
-    setState(await res.json());
+    try {
+      const res = await fetch(`${BASE}/api/state`, { cache: "no-store" });
+      if (!res.ok) throw new Error("no api");
+      setState(await res.json());
+    } catch {
+      // static preview (GitHub Pages): load the bundled sample snapshot
+      const res = await fetch(`${BASE}/demo-db.json`, { cache: "no-store" });
+      const db = await res.json();
+      setState({
+        patient: db.patient,
+        users: db.users,
+        entries: [...db.entries].sort((a: { ts: string }, b: { ts: string }) => b.ts.localeCompare(a.ts)),
+        appointments: [...db.appointments].sort((a: { ts: string }, b: { ts: string }) => a.ts.localeCompare(b.ts)),
+        messages: db.messages,
+        portalOutbox: db.portalOutbox,
+        reports: db.reports,
+      });
+      setDemoMode(true);
+    }
   }, []);
 
   useEffect(() => {
@@ -57,7 +78,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
   const user = state?.users.find((u) => u.id === userId) ?? state?.users[0] ?? null;
 
-  return <AppCtx.Provider value={{ state, refresh, user, setUserId, uiLang, setUiLang }}>{children}</AppCtx.Provider>;
+  return <AppCtx.Provider value={{ state, refresh, user, setUserId, uiLang, setUiLang, demoMode }}>{children}</AppCtx.Provider>;
 }
 
 export const useApp = () => useContext(AppCtx);

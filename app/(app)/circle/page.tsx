@@ -7,7 +7,7 @@ import { Message, User } from "@/lib/types";
 type DisplayMessage = Message & { display: string; translated: boolean };
 
 export default function Circle() {
-  const { state, user, uiLang } = useApp();
+  const { state, user, uiLang, demoMode } = useApp();
   const [msgs, setMsgs] = useState<DisplayMessage[]>([]);
   const [text, setText] = useState("");
   const [showOrig, setShowOrig] = useState<string | null>(null);
@@ -17,16 +17,32 @@ export default function Circle() {
   const lang = xlate ?? uiLang;
 
   const load = useCallback(async () => {
-    const res = await fetch(`/api/messages?lang=${lang}`, { cache: "no-store" });
-    const data = await res.json();
-    setMsgs(data.messages);
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/api/messages?lang=${lang}`, { cache: "no-store" });
+      if (!res.ok) throw new Error("no api");
+      const data = await res.json();
+      setMsgs(data.messages);
+    } catch {
+      // static preview: show messages with any pre-cached translations
+      setMsgs(
+        (stateRef.current?.messages ?? []).map((m) => ({
+          ...m,
+          display: m.lang === lang ? m.text : m.translations?.[lang] ?? m.text,
+          translated: m.lang !== lang && !!m.translations?.[lang],
+        }))
+      );
+    }
   }, [lang]);
+
+  const stateRef = useRef(state);
+  stateRef.current = state;
 
   useEffect(() => {
     load();
+    if (demoMode) return;
     const t = setInterval(load, 6000);
     return () => clearInterval(t);
-  }, [load]);
+  }, [load, demoMode, state]);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: 99999 });
@@ -41,12 +57,16 @@ export default function Circle() {
     if (!text.trim()) return;
     const t = text;
     setText("");
-    await fetch("/api/messages", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ fromId: user!.id, text: t, lang }),
-    });
-    load();
+    try {
+      await fetch("/api/messages", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ fromId: user!.id, text: t, lang }),
+      });
+      load();
+    } catch {
+      setMsgs((m) => [...m, { id: `local_${Date.now()}`, ts: new Date().toISOString(), fromId: user!.id, text: t, lang, display: t, translated: false }]);
+    }
   }
 
   return (

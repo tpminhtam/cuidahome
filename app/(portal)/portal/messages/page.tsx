@@ -9,7 +9,12 @@ const card: React.CSSProperties = { background: "#fff", border: "1px solid #e1df
 export default function PortalMessages() {
   const [outbox, setOutbox] = useState<PortalMessage[]>([]);
   useEffect(() => {
-    const load = () => fetch("/api/state").then((r) => r.json()).then((d) => setOutbox(d.portalOutbox ?? []));
+    const BASE = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+    const load = () =>
+      fetch(`${BASE}/api/state`)
+        .then((r) => (r.ok ? r.json() : fetch(`${BASE}/demo-db.json`).then((x) => x.json())))
+        .then((d) => setOutbox(d.portalOutbox ?? []))
+        .catch(() => fetch(`${BASE}/demo-db.json`).then((x) => x.json()).then((d) => setOutbox(d.portalOutbox ?? [])).catch(() => {}));
     load();
     const t = setInterval(load, 3000);
     return () => clearInterval(t);
