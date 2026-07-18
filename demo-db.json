@@ -553,7 +553,7 @@
     {
      "severity": "urgent",
      "reason": "Blood sugar 68 is low",
-     "advice": "Give juice or food now and recheck in 15 minutes. Tell the care team it happened."
+     "advice": "Give juice or food now and recheck in 15 minutes."
     }
    ]
   },
@@ -662,8 +662,7 @@
    "flags": [
     {
      "severity": "urgent",
-     "reason": "A near-fall was recorded (no injury)",
-     "advice": "Worth telling the care team. Have him sit at the edge of the bed for a moment before standing."
+     "reason": "A near-fall was recorded (no injury)"
     }
    ]
   },
@@ -800,7 +799,7 @@
    "pinned": false,
    "translations": {
     "en": "Dad woke up dizzy. Blood pressure 104/60 — I already logged it in the app.",
-    "zh": "爸爸早上起来头晕。血压104/60——我已经记录在应用程序里了。"
+    "zh": "爸爸早上起来头晕。血压104/60——我已经记录到应用程序里了。"
    }
   },
   {
@@ -811,8 +810,8 @@
    "text": "Heading to class — Rosa takes over at 2pm. She knows about the new BP pill. 🤝",
    "pinned": false,
    "translations": {
-    "es": "Voy camino a clase — Rosa toma el relevo a las 2pm. Ella sabe de la nueva pastilla para la presión. 🤝",
-    "zh": "我去上课了——罗莎下午2点接班。她知道新的降压药的事。🤝"
+    "es": "Voy camino a clase — Rosa toma el relevo a las 2pm. Ella sabe sobre la nueva pastilla para la presión. 🤝",
+    "zh": "去上课了——罗莎下午2点接班。她知道新的降压药的事。🤝"
    }
   },
   {
@@ -824,7 +823,7 @@
    "pinned": false,
    "translations": {
     "en": "He almost fell when getting up 😢 He didn't hit himself. We need to tell Dr. Kim.",
-    "zh": "起身时差点摔倒了 😢 没有磕到。得告诉Kim医生。"
+    "zh": "起身时差点摔倒 😢 他没有撞到。得告诉Kim医生。"
    }
   },
   {
@@ -835,8 +834,8 @@
    "text": "I've got him tomorrow morning — will check BP after breakfast and log it.",
    "pinned": false,
    "translations": {
-    "es": "Yo lo cuido mañana por la mañana — le revisaré la presión arterial después del desayuno y la anotaré.",
-    "zh": "明天早上我来照顾他——早饭后我会量血压并记录下来。"
+    "es": "Yo lo cuido mañana por la mañana — le voy a revisar la presión después del desayuno y la anoto.",
+    "zh": "明天早上我来照顾他——早饭后会量血压并记录下来。"
    }
   },
   {
@@ -884,39 +883,39 @@
  ],
  "reports": [
   {
-   "id": "r_mrqusxx1wercuy",
+   "id": "r_mrqvqgqj00nb25",
    "appointmentId": "a_next",
-   "generatedAt": "2026-07-18T21:03:12.565Z",
+   "generatedAt": "2026-07-18T21:29:16.603Z",
    "periodStart": "2026-07-08T17:00:00.000Z",
-   "periodEnd": "2026-07-18T21:03:12.565Z",
+   "periodEnd": "2026-07-18T21:29:16.603Z",
    "json": {
-    "one_liner": "BP fell from 128/74 to 98/56 over 10 days; weight -1.6 lb; near-fall and nighttime wandering recorded.",
-    "symptoms_line": "Dizziness 3 episodes (Jul 15, 18); knee pain Jul 13; near-fall Jul 18.",
+    "one_liner": "BP fell from 128/74 to 98/56 over 10 days; weight down 1.6 lb; one near-fall 7/18.",
+    "symptoms_line": "Dizziness 7/15, 7/18 (x2); knee pain 7/13; near-fall 7/18; nighttime wandering/confusion 7/17.",
     "vitals": {
      "blood_pressure": {
-      "summary": "128/74 to 98/56 across 10 readings",
+      "summary": "First 128/74, last 98/56; range 98-128 systolic",
       "trend": "falling"
      },
      "weight": {
-      "summary": "173.5 to 171.9 lb, -1.6 over 4 readings",
+      "summary": "173.5 to 171.9 lb, down 1.6 lb",
       "trend": "falling"
      },
      "glucose": {
-      "summary": "Range 68-92; fasting 68 on Jul 16",
+      "summary": "Range 68-92; fasting 68 on 7/16",
       "trend": "falling"
      }
     },
-    "question_for_doctor": "Should we adjust the hydrochlorothiazide given the dizziness and lower BP?"
+    "question_for_doctor": "Should we adjust or stop the hydrochlorothiazide given the dizziness and falling BP?"
    }
   }
  ],
  "portalOutbox": [
   {
-   "id": "pm_mrqutbg4mqrj3q",
-   "ts": "2026-07-18T21:03:30.100Z",
+   "id": "pm_mrqvr54z1iuxgw",
+   "ts": "2026-07-18T21:29:48.227Z",
    "to": "Dr. Sarah Kim — Primary Care",
    "subject": "Pre-visit summary — Isreal Howell (DOB 1939-03-20)",
-   "body": "PRE-VISIT SUMMARY (caregiver home observations via CuidaHome)\n\nBP fell from 128/74 to 98/56 over 10 days; weight -1.6 lb; near-fall and nighttime wandering recorded.\n\nVITALS — BP: 128/74 to 98/56 across 10 readings | Weight: 173.5 to 171.9 lb, -1.6 over 4 readings | Glucose: Range 68-92; fasting 68 on Jul 16\nSYMPTOMS — Dizziness 3 episodes (Jul 15, 18); knee pain Jul 13; near-fall Jul 18.\n\nQUESTION — Should we adjust the hydrochlorothiazide given the dizziness and lower BP?\n\nSent by Maria Alvarez (daughter, caregiver proxy). Full log with trend charts in CuidaHome.",
+   "body": "PRE-VISIT SUMMARY (caregiver home observations via CuidaHome)\n\nBP fell from 128/74 to 98/56 over 10 days; weight down 1.6 lb; one near-fall 7/18.\n\nVITALS — BP: First 128/74, last 98/56; range 98-128 systolic | Weight: 173.5 to 171.9 lb, down 1.6 lb | Glucose: Range 68-92; fasting 68 on 7/16\nSYMPTOMS — Dizziness 7/15, 7/18 (x2); knee pain 7/13; near-fall 7/18; nighttime wandering/confusion 7/17.\n\nQUESTION — Should we adjust or stop the hydrochlorothiazide given the dizziness and falling BP?\n\nSent by Maria Alvarez (daughter, caregiver proxy). Full log with trend charts in CuidaHome.",
    "from": "Maria Alvarez (caregiver proxy)"
   }
  ],
