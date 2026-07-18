@@ -3,11 +3,8 @@
 import { useEffect, useRef } from "react";
 
 /**
- * Companion avatar with TRUE background removal — the Vision Agent look:
- * per-frame person segmentation (MediaPipe selfie segmenter, vendored locally
- * in /public/wasm + /public/models, no CDN) drives an alpha mask, so only the
- * person renders, soft-edged, floating on the page. Auto-crops to her bounding
- * box. `speaking` drives playback: she moves while her voice audio plays.
+ * Companion avatar — circular portrait crop (her + background inside a ring).
+ * Rests on a calm mouth-closed frame; plays (muted) while her voice audio plays.
  */
 export default function AvatarBubble({
   src,
@@ -21,11 +18,8 @@ export default function AvatarBubble({
   onMissing?: () => void;
 }) {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null); // visible, cropped
-  const bboxRef = useRef<{ x: number; y: number; w: number; h: number } | null>(null);
 
   // idle pose: a calm, mouth-closed moment near the end of the clip
-  // (probed frames: duration−0.8s = hands folded, neutral smile, cleanest matte)
   const IDLE_FROM_END = 0.8;
 
   useEffect(() => {
@@ -48,169 +42,30 @@ export default function AvatarBubble({
     }
   }, [speaking]);
 
-  useEffect(() => {
-    const video = videoRef.current;
-    const view = canvasRef.current;
-    if (!video || !view) return;
-    const viewCtx = view.getContext("2d");
-    if (!viewCtx) return;
-
-    const BASE = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
-    const work = document.createElement("canvas");
-    const workCtx = work.getContext("2d", { willReadFrequently: true })!;
-    const maskCanvas = document.createElement("canvas");
-    const maskCtx = maskCanvas.getContext("2d")!;
-
-    let raf = 0;
-    let disposed = false;
-    let segmenter: { segmentForVideo: (v: HTMLVideoElement, ts: number) => { confidenceMasks?: { width: number; height: number; getAsFloat32Array: () => Float32Array; close: () => void }[]; close: () => void }; close: () => void } | null = null;
-    let lastTime = -1;
-    let frameCount = 0;
-
-    (async () => {
-      try {
-        const visionLib = await import("@mediapipe/tasks-vision");
-        const fileset = await visionLib.FilesetResolver.forVisionTasks(`${BASE}/wasm`);
-        segmenter = await visionLib.ImageSegmenter.createFromOptions(fileset, {
-          baseOptions: { modelAssetPath: `${BASE}/models/selfie_segmenter.tflite`, delegate: "GPU" },
-          runningMode: "VIDEO",
-          outputConfidenceMasks: true,
-          outputCategoryMask: false,
-        });
-      } catch {
-        segmenter = null; // fall back to unsegmented (still auto-cropped) below
-      }
-      if (disposed) {
-        segmenter?.close();
-        return;
-      }
-
-      const render = () => {
-        const w = video.videoWidth;
-        const h = video.videoHeight;
-        const advanced = video.currentTime !== lastTime;
-        if (w && h && (advanced || !bboxRef.current)) {
-          lastTime = video.currentTime;
-          if (work.width !== w) { work.width = w; work.height = h; }
-          workCtx.clearRect(0, 0, w, h);
-          workCtx.drawImage(video, 0, 0, w, h);
-
-          if (segmenter) {
-            try {
-              const res = segmenter.segmentForVideo(video, performance.now());
-              const masks = res.confidenceMasks;
-              if (masks?.length) {
-                // pick the person mask: sample center vs corners; person should be center-heavy
-                let mask = masks[masks.length - 1];
-                let data = mask.getAsFloat32Array();
-                const mw = mask.width, mh = mask.height;
-                const at = (x: number, y: number) => data[y * mw + x] ?? 0;
-                const center = at(mw >> 1, mh >> 1);
-                const corners = (at(2, 2) + at(mw - 3, 2)) / 2;
-                const invert = center < corners;
-
-                if (maskCanvas.width !== mw) { maskCanvas.width = mw; maskCanvas.height = mh; }
-                // generous ramp keeps fine hair; wisp/halo cleanup below removes
-                // everything not connected to the main person region
-                const n = mw * mh;
-                const conf = new Float32Array(n);
-                for (let i = 0; i < n; i++) conf[i] = invert ? 1 - data[i] : data[i];
-
-                // largest 4-connected component of (conf > 0.35)
-                const label = new Int32Array(n); // 0 = unvisited
-                let bestLabel = 0, bestSize = 0, nextLabel = 0;
-                const stack: number[] = [];
-                for (let s = 0; s < n; s++) {
-                  if (label[s] !== 0 || conf[s] <= 0.35) continue;
-                  nextLabel++;
-                  let size = 0;
-                  stack.push(s);
-                  label[s] = nextLabel;
-                  while (stack.length) {
-                    const i = stack.pop()!;
-                    size++;
-                    const x = i % mw, y = (i / mw) | 0;
-                    if (x > 0 && label[i - 1] === 0 && conf[i - 1] > 0.35) { label[i - 1] = nextLabel; stack.push(i - 1); }
-                    if (x < mw - 1 && label[i + 1] === 0 && conf[i + 1] > 0.35) { label[i + 1] = nextLabel; stack.push(i + 1); }
-                    if (y > 0 && label[i - mw] === 0 && conf[i - mw] > 0.35) { label[i - mw] = nextLabel; stack.push(i - mw); }
-                    if (y < mh - 1 && label[i + mw] === 0 && conf[i + mw] > 0.35) { label[i + mw] = nextLabel; stack.push(i + mw); }
-                  }
-                  if (size > bestSize) { bestSize = size; bestLabel = nextLabel; }
-                }
-
-                const mimg = maskCtx.createImageData(mw, mh);
-                for (let i = 0; i < n; i++) {
-                  if (label[i] !== bestLabel) continue; // drop disconnected wisps
-                  const c = conf[i];
-                  const a = c <= 0.35 ? 0 : c >= 0.8 ? 1 : (c - 0.35) / 0.45;
-                  mimg.data[i * 4 + 3] = Math.round(a * 255);
-                }
-                maskCtx.putImageData(mimg, 0, 0);
-                workCtx.globalCompositeOperation = "destination-in";
-                workCtx.imageSmoothingEnabled = true;
-                workCtx.filter = "blur(1.2px)"; // soft, clean edge
-                workCtx.drawImage(maskCanvas, 0, 0, w, h);
-                workCtx.filter = "none";
-                workCtx.globalCompositeOperation = "source-over";
-                res.close();
-              }
-            } catch {
-              /* segment can fail on the first frames — render unmasked */
-            }
-          }
-
-          // auto-crop to the person's bounding box (sampled, refreshed periodically)
-          if (!bboxRef.current || frameCount % 30 === 0) {
-            try {
-              const frame = workCtx.getImageData(0, 0, w, h);
-              const d = frame.data;
-              let minX = w, minY = h, maxX = 0, maxY = 0;
-              for (let y = 0; y < h; y += 4) {
-                for (let x = 0; x < w; x += 4) {
-                  if (d[(y * w + x) * 4 + 3] > 40) {
-                    if (x < minX) minX = x;
-                    if (x > maxX) maxX = x;
-                    if (y < minY) minY = y;
-                    if (y > maxY) maxY = y;
-                  }
-                }
-              }
-              if (maxX > minX + 20 && maxY > minY + 20) {
-                const pad = Math.round((maxX - minX) * 0.05);
-                bboxRef.current = {
-                  x: Math.max(0, minX - pad),
-                  y: Math.max(0, minY - pad),
-                  w: Math.min(w, maxX + pad) - Math.max(0, minX - pad),
-                  h: Math.min(h, maxY + pad) - Math.max(0, minY - pad),
-                };
-              }
-            } catch { /* ignore */ }
-          }
-          frameCount++;
-
-          const bb = bboxRef.current ?? { x: 0, y: 0, w, h };
-          const targetH = 320;
-          const targetW = Math.round((bb.w / bb.h) * targetH);
-          if (view.width !== targetW) { view.width = targetW; view.height = targetH; }
-          viewCtx.clearRect(0, 0, targetW, targetH);
-          viewCtx.drawImage(work, bb.x, bb.y, bb.w, bb.h, 0, 0, targetW, targetH);
-        }
-        raf = requestAnimationFrame(render);
-      };
-      raf = requestAnimationFrame(render);
-    })();
-
-    return () => {
-      disposed = true;
-      cancelAnimationFrame(raf);
-      segmenter?.close();
-    };
-  }, []);
-
   return (
-    <div className="flex flex-col items-center select-none" aria-hidden>
-      <video ref={videoRef} src={src} muted loop playsInline preload="auto" onError={onMissing} style={{ display: "none" }} />
-      <canvas ref={canvasRef} style={{ height, width: "auto", maxWidth: "100%" }} />
+    <div className="flex justify-center select-none" aria-hidden>
+      <div
+        style={{
+          width: height,
+          height,
+          borderRadius: "50%",
+          overflow: "hidden",
+          border: "3px solid #fff",
+          boxShadow: "0 4px 16px rgba(35,32,28,0.18), 0 0 0 1px var(--line)",
+          flexShrink: 0,
+        }}
+      >
+        <video
+          ref={videoRef}
+          src={src}
+          muted
+          loop
+          playsInline
+          preload="auto"
+          onError={onMissing}
+          style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 12%", transform: "scale(1.25)", transformOrigin: "center 25%" }}
+        />
+      </div>
     </div>
   );
 }
