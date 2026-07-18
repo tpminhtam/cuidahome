@@ -2,5 +2,5 @@
 2:I[99090,["/cuidahome/_next/static/chunks/05-c3ty_6dwfk.js","/cuidahome/_next/static/chunks/14mrh2-p_w84d.js","/cuidahome/_next/static/chunks/1gcf3xboq7jot.js","/cuidahome/_next/static/chunks/06bu_bgm5gl1o.js"],"default"]
 3:I[97367,["/cuidahome/_next/static/chunks/05-c3ty_6dwfk.js","/cuidahome/_next/static/chunks/14mrh2-p_w84d.js"],"OutletBoundary"]
 4:"$Sreact.suspense"
-0:{"rsc":["$","$1","c",{"children":[["$","$L2",null,{"category":"glucose"}],[["$","script","script-0",{"src":"/cuidahome/_next/static/chunks/06bu_bgm5gl1o.js","async":true}]],["$","$L3",null,{"children":["$","$4",null,{"name":"Next.MetadataOutlet","children":"$@5"}]}]]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"rbPGEGj1oo0lfJp1KiJEX"}
+0:{"rsc":["$","$1","c",{"children":[["$","$L2",null,{"category":"glucose"}],[["$","script","script-0",{"src":"/cuidahome/_next/static/chunks/06bu_bgm5gl1o.js","async":true}]],["$","$L3",null,{"children":["$","$4",null,{"name":"Next.MetadataOutlet","children":"$@5"}]}]]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"V-1vP6Ja3vGwYI5YZx_1S"}
 5:null
