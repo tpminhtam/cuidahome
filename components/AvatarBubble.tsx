@@ -110,11 +110,39 @@ export default function AvatarBubble({
                 const invert = center < corners;
 
                 if (maskCanvas.width !== mw) { maskCanvas.width = mw; maskCanvas.height = mh; }
+                // generous ramp keeps fine hair; wisp/halo cleanup below removes
+                // everything not connected to the main person region
+                const n = mw * mh;
+                const conf = new Float32Array(n);
+                for (let i = 0; i < n; i++) conf[i] = invert ? 1 - data[i] : data[i];
+
+                // largest 4-connected component of (conf > 0.35)
+                const label = new Int32Array(n); // 0 = unvisited
+                let bestLabel = 0, bestSize = 0, nextLabel = 0;
+                const stack: number[] = [];
+                for (let s = 0; s < n; s++) {
+                  if (label[s] !== 0 || conf[s] <= 0.35) continue;
+                  nextLabel++;
+                  let size = 0;
+                  stack.push(s);
+                  label[s] = nextLabel;
+                  while (stack.length) {
+                    const i = stack.pop()!;
+                    size++;
+                    const x = i % mw, y = (i / mw) | 0;
+                    if (x > 0 && label[i - 1] === 0 && conf[i - 1] > 0.35) { label[i - 1] = nextLabel; stack.push(i - 1); }
+                    if (x < mw - 1 && label[i + 1] === 0 && conf[i + 1] > 0.35) { label[i + 1] = nextLabel; stack.push(i + 1); }
+                    if (y > 0 && label[i - mw] === 0 && conf[i - mw] > 0.35) { label[i - mw] = nextLabel; stack.push(i - mw); }
+                    if (y < mh - 1 && label[i + mw] === 0 && conf[i + mw] > 0.35) { label[i + mw] = nextLabel; stack.push(i + mw); }
+                  }
+                  if (size > bestSize) { bestSize = size; bestLabel = nextLabel; }
+                }
+
                 const mimg = maskCtx.createImageData(mw, mh);
-                for (let i = 0; i < mw * mh; i++) {
-                  const c = invert ? 1 - data[i] : data[i];
-                  // tight matte: ramp between 0.55 and 0.9 confidence (kills halo pixels)
-                  const a = c <= 0.55 ? 0 : c >= 0.9 ? 1 : (c - 0.55) / 0.35;
+                for (let i = 0; i < n; i++) {
+                  if (label[i] !== bestLabel) continue; // drop disconnected wisps
+                  const c = conf[i];
+                  const a = c <= 0.35 ? 0 : c >= 0.8 ? 1 : (c - 0.35) / 0.45;
                   mimg.data[i * 4 + 3] = Math.round(a * 255);
                 }
                 maskCtx.putImageData(mimg, 0, 0);
