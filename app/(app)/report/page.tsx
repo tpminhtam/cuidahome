@@ -25,6 +25,12 @@ export default function ReportPage() {
   const p = state.patient;
   const next = state.appointments.find((a) => !a.completed && new Date(a.ts) > new Date() && a.type === "primary_care");
 
+  // caregiver-facing urgent alerts live HERE, on the Visit tab (Dr.'s design):
+  // the alert sits where the action is — talking to the care team
+  const urgent = state.entries
+    .filter((e) => Date.now() - new Date(e.ts).getTime() < 48 * 3600e3)
+    .flatMap((e) => e.flags.filter((f) => f.severity === "urgent"));
+
   const asc = [...state.entries].sort((a, b) => a.ts.localeCompare(b.ts));
   const bpPts = asc.filter((e) => e.category === "blood_pressure").map((e) => {
     const d = e.data as BPData;
@@ -73,6 +79,16 @@ export default function ReportPage() {
         <span className="text-2xl">🩺</span>
       </div>
 
+      {urgent.length > 0 && (
+        <section className="no-print card p-3" style={{ background: "var(--terra-soft)", borderColor: "#ecc9b5" }}>
+          <p className="text-xs font-bold uppercase tracking-wide mb-1" style={{ color: "var(--terra)" }}>
+            📞 Worth telling the care team
+          </p>
+          <p className="text-sm leading-snug">{urgent[0].reason}</p>
+          {urgent[0].advice && <p className="text-xs text-muted mt-1">{urgent[0].advice}</p>}
+        </section>
+      )}
+
       <div className="no-print flex gap-2">
         <button onClick={generate} disabled={busy} className="btn-primary flex-1 text-sm">
           {busy ? "Generating…" : report ? "↻ Regenerate" : "Generate report"}
@@ -88,12 +104,6 @@ export default function ReportPage() {
       {j && (
         <section className="card p-4" style={{ background: "var(--teal-soft)" }}>
           <p className="text-sm font-semibold leading-snug">{j.one_liner}</p>
-          {j.key_flag && (
-            <p className="text-sm mt-2 leading-snug">
-              <span className="font-bold" style={{ color: "var(--urgent)" }}>🚩 </span>
-              {j.key_flag}
-            </p>
-          )}
         </section>
       )}
 

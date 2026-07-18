@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { CATEGORIES } from "@/lib/types";
-import { fmtDay, fmtTime, timeAgo, useApp } from "@/components/useApp";
+import { fmtDay, fmtTime, useApp } from "@/components/useApp";
 
 export default function Home() {
   const { state, user, uiLang } = useApp();
@@ -10,68 +10,22 @@ export default function Home() {
 
   const es = uiLang === "es";
   const p = state.patient;
-  // two-tier visibility: caregivers see URGENT flags only (calm, actionable);
-  // watch-level signals stay silent and surface in the clinician report
-  const urgent = state.entries
-    .filter((e) => Date.now() - new Date(e.ts).getTime() < 48 * 3600e3)
-    .flatMap((e) => e.flags.filter((f) => f.severity === "urgent").map((f) => ({ ...f, ts: e.ts })));
   const upcoming = state.appointments.filter((a) => !a.completed && new Date(a.ts) > new Date());
   const nextAppt = upcoming.find((a) => a.type === "primary_care") ?? upcoming[0];
   const hoursToAppt = nextAppt ? (new Date(nextAppt.ts).getTime() - Date.now()) / 3600e3 : Infinity;
-  const lastBP = state.entries.find((e) => e.category === "blood_pressure");
-  const todayCount = state.entries.filter((e) => new Date(e.ts).toDateString() === new Date().toDateString()).length;
 
   return (
     <div className="space-y-3">
-      {/* patient card — deliberately light on clinical detail (Dr.'s feedback #4) */}
+      {/* patient card — minimal by the physician's design: name only, no clinical detail */}
       <section className="card p-4 flex items-center gap-3">
         <span className="text-4xl">{p.photo}</span>
         <div className="min-w-0 flex-1">
           <h1 className="font-bold text-lg leading-tight">{p.name}</h1>
-          <p className="text-xs text-muted">
-            {p.age} {es ? "años" : "years"} · {todayCount} {es ? "registros hoy" : "entries today"}
-            {lastBP
-              ? ` · BP ${(lastBP.data as { systolic: number; diastolic: number }).systolic}/${(lastBP.data as { systolic: number; diastolic: number }).diastolic} ${timeAgo(lastBP.ts)}`
-              : ""}
-          </p>
         </div>
         <Link href="/meds" className="chip shrink-0" style={{ background: "var(--teal-soft)", color: "var(--teal)", borderColor: "#c8ded9" }}>
           💊 {es ? "Medicinas" : "Med list"}
         </Link>
       </section>
-
-      {/* urgent-only, calmly worded (Dr.'s two-tier design) */}
-      {urgent.length > 0 && (
-        <section className="card p-3" style={{ background: "var(--terra-soft)", borderColor: "#ecc9b5" }}>
-          <p className="text-xs font-bold uppercase tracking-wide mb-1" style={{ color: "var(--terra)" }}>
-            📞 {es ? "Vale la pena avisar al equipo médico" : "Worth telling the care team"}
-          </p>
-          <p className="text-sm leading-snug">{urgent[0].reason}</p>
-          {urgent[0].advice && <p className="text-xs text-muted mt-1">{urgent[0].advice}</p>}
-          {urgent.length > 1 && (
-            <Link href="/timeline" className="text-xs underline mt-1 inline-block" style={{ color: "var(--terra)" }}>
-              +{urgent.length - 1} {es ? "más en el registro" : "more in the log"}
-            </Link>
-          )}
-        </section>
-      )}
-
-      {/* voice CTA */}
-      <Link
-        href="/voice"
-        className="card p-4 flex items-center gap-3 border-2"
-        style={{ borderColor: "var(--terra)", background: "var(--terra-soft)" }}
-      >
-        <span className="grid place-items-center w-12 h-12 rounded-full text-2xl" style={{ background: "var(--terra)" }}>
-          🎙️
-        </span>
-        <div>
-          <p className="font-bold leading-tight">{es ? "Cuéntame cómo está papá" : "Tell me how he's doing"}</p>
-          <p className="text-xs text-muted">
-            {es ? "Habla 30 segundos — yo lo anoto todo" : "Talk for 30 seconds — I'll log everything"}
-          </p>
-        </div>
-      </Link>
 
       {/* next appointment */}
       {nextAppt && (

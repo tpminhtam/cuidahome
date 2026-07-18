@@ -150,11 +150,10 @@ export interface Report {
 }
 
 // Structured output schema target for Claude.
-// Per the physician's direction: 1/3 of a printed page MAX — a one-liner,
-// one symptoms line, vital trends, one key flag, ONE question.
+// Per the physician's direction: 1/3 of a printed page MAX, INFORMATION ONLY —
+// no flags, no interpretation; clinical judgment stays with the physician.
 export interface PreVisitReport {
   one_liner: string;
-  key_flag: string; // single most important red flag; "" if none
   symptoms_line: string;
   vitals: {
     blood_pressure: { summary: string; trend: "rising" | "falling" | "stable" };

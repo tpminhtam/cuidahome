@@ -224,6 +224,9 @@ export async function POST() {
   if (!db.reports.length) {
     return Response.json({ error: "no_report", message: "Generate the pre-visit report first." }, { status: 400 });
   }
+  // demo rerun hygiene: a new agent run replaces the previous pre-visit message
+  // so reruns show ONE fresh message instead of accumulating duplicates
+  db.portalOutbox = db.portalOutbox.filter((m) => !m.subject.startsWith("Pre-visit summary —"));
   const run: PortalRun = { id: uid("run"), state: "running", steps: [], startedAt: new Date().toISOString() };
   db.portalRuns = [run];
   persist();

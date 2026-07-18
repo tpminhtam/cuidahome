@@ -4,15 +4,15 @@ import { BPData, Entry, GlucoseData, PreVisitReport, WeightData } from "@/lib/ty
 
 export const maxDuration = 120;
 
-// ULTRA-SHORT report per the physician: 1/3 of a printed page MAX —
-// one-liner clinical summary, one symptoms line, vital trends, ONE question.
+// ULTRA-SHORT report per the physician: 1/3 of a printed page MAX,
+// INFORMATION ONLY — no red flags, no interpretation, no recommendations.
+// Clinical judgment stays with the physician.
 const SCHEMA = {
   type: "object",
   additionalProperties: false,
-  required: ["one_liner", "key_flag", "symptoms_line", "vitals", "question_for_doctor"],
+  required: ["one_liner", "symptoms_line", "vitals", "question_for_doctor"],
   properties: {
-    one_liner: { type: "string", description: "≤22 words. The single most important clinical change this period, quantified." },
-    key_flag: { type: "string", description: "≤16 words. The ONE most important red flag, or empty string if none." },
+    one_liner: { type: "string", description: "≤22 words. Factual summary of the most notable changes this period, quantified. Descriptive only — no interpretation, no severity language." },
     symptoms_line: { type: "string", description: "≤18 words. One line summarizing symptom events with counts/dates." },
     vitals: {
       type: "object", additionalProperties: false, required: ["blood_pressure", "weight", "glucose"],
@@ -89,19 +89,19 @@ PRECOMPUTED STATS (use these numbers exactly): ${JSON.stringify(stats)}
 HOME OBSERVATIONS (structured log by family caregivers, chronological):
 ${digestEntries(entries)}
 
-The physician wants a THIRD OF A PAGE, scannable in 15 seconds, ENTIRELY in English:
-- one_liner: the single most important clinical change, quantified, connected to last visit's medication changes where the data supports it (≤22 words).
-- key_flag: the ONE most important red flag (≤16 words); "" if truly none.
-- symptoms_line: one line covering the symptom events with counts (≤18 words).
+The physician wants a THIRD OF A PAGE, scannable in 15 seconds, ENTIRELY in English, and INFORMATION ONLY:
+- Report observations and measurements exactly as recorded. Temporal facts are fine ("since hydrochlorothiazide was started"); interpretation is NOT ("overtreatment", "concerning", "risk of X", "likely due to"). No severity labels, no recommendations, no diagnoses — clinical judgment belongs to the physician reading this.
+- one_liner: factual summary of the most notable changes, quantified (≤22 words).
+- symptoms_line: one line covering the symptom events with counts/dates (≤18 words).
 - vitals summaries: ≤10 words each, real numbers.
-- question_for_doctor: EXACTLY ONE practical question (≤15 words).
+- question_for_doctor: EXACTLY ONE practical question the FAMILY wants to ask (≤15 words) — phrased as their question, not your advice.
 No filler. Facts only from the log.`;
 
   const res = await client.messages.create({
     model: MODEL,
     max_tokens: 1500,
     system:
-      "You generate ultra-concise pre-visit clinical summaries from caregiver home observations for CuidaHome. English only. Facts only from the provided log — never invent values.",
+      "You generate ultra-concise, strictly informational pre-visit summaries from caregiver home observations for CuidaHome. English only. Facts only from the provided log — never invent values, never interpret, never recommend.",
     messages: [{ role: "user", content: prompt }],
     output_config: { format: { type: "json_schema", schema: SCHEMA as unknown as Record<string, unknown> } },
   });
