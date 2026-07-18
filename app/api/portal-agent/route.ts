@@ -114,7 +114,7 @@ async function runAgent(runId: string) {
 STEPS:
 1. Sign in: email "maria.alvarez@example.com", password "cuida2026".
 2. Open Messages, then start a New message.
-3. To: select "Dr. Sarah Kim — Primary Care".
+3. To: click the radio option "Dr. Sarah Kim — Primary Care".
 4. Subject: type exactly: ${msg.subject}
 5. Message: click the message box, then in ONE type action enter the FULL text between <body> tags, verbatim:
 <body>

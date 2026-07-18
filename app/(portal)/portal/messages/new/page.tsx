@@ -30,15 +30,15 @@ export default function NewPortalMessage() {
     <div style={{ maxWidth: 640, margin: "0 auto", background: "#fff", border: "1px solid #cfd8e0", borderRadius: 8, padding: 26 }}>
       <h1 style={{ fontSize: 20, fontWeight: 700, marginBottom: 14 }}>New message to your care team</h1>
       <form onSubmit={submit}>
-        <label style={{ fontSize: 13, fontWeight: 700, display: "block" }}>
-          To
-          <select id="to" style={input} value={to} onChange={(e) => setTo(e.target.value)}>
-            <option value="">— Select a recipient —</option>
-            <option>Dr. Sarah Kim — Primary Care</option>
-            <option>Nurse line — Bayview Primary Care</option>
-            <option>Pharmacy — Bayview</option>
-          </select>
-        </label>
+        <fieldset style={{ border: 0, padding: 0, margin: 0 }}>
+          <legend style={{ fontSize: 13, fontWeight: 700 }}>To</legend>
+          {["Dr. Sarah Kim — Primary Care", "Nurse line — Bayview Primary Care", "Pharmacy — Bayview"].map((r) => (
+            <label key={r} style={{ display: "flex", alignItems: "center", gap: 10, fontSize: 15, padding: "10px 12px", border: "1px solid #9db2c2", borderRadius: 6, marginTop: 6, background: to === r ? "#e8f0f8" : "#fff", cursor: "pointer" }}>
+              <input type="radio" name="to" value={r} checked={to === r} onChange={() => setTo(r)} style={{ width: 18, height: 18 }} />
+              {r}
+            </label>
+          ))}
+        </fieldset>
         <label style={{ fontSize: 13, fontWeight: 700, display: "block", marginTop: 14 }}>
           Subject
           <input id="subject" style={input} value={subject} onChange={(e) => setSubject(e.target.value)} />
