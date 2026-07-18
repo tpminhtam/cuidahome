@@ -108,7 +108,18 @@ PRECOMPUTED STATS (use these numbers exactly): ${JSON.stringify(stats)}
 HOME OBSERVATIONS (structured log by family caregivers, chronological):
 ${digestEntries(entries)}
 
-Write for a physician with 30 seconds: specific, quantified, no filler, connect findings to the medication changes from last visit where the data supports it. Red flags: most important first; include the fall, the orthostatic-pattern dizziness with the BP downtrend, the hypoglycemia episode, and new nighttime confusion/wandering if present in the log. Caregiver observations: translate Spanish quotes to English. Suggested questions: practical, for the caregiver to ask.`;
+Write for a physician with 30 seconds: specific, quantified, no filler, connect findings to the medication changes from last visit where the data supports it.
+
+LANGUAGE: This is a clinical document — write it ENTIRELY in English regardless of the languages in the log. Translate caregiver quotes to English.
+
+HARD BUDGETS (the doctor asked for a scannable half-page):
+- one_liner: ≤22 words.
+- red_flags: the 3 MOST important only, each ≤20 words. Fold related findings together (e.g. BP downtrend + dizziness + near-fall = one flag).
+- vitals summaries: ≤12 words each.
+- symptom_events: top 3 only, each ≤12 words.
+- mood_and_sleep ≤25 words; nutrition ≤15 words; medications ≤18 words.
+- caregiver_observations: the 2 most telling quotes.
+- suggested_questions: exactly 3, each ≤15 words.`;
 
   const res = await client.messages.create({
     model: MODEL,
@@ -122,6 +133,11 @@ Write for a physician with 30 seconds: specific, quantified, no filler, connect 
   const block = res.content.find((b) => b.type === "text");
   if (!block || block.type !== "text") return Response.json({ error: "no_output" }, { status: 500 });
   const json = JSON.parse(block.text) as PreVisitReport;
+  // enforce the brevity caps server-side too
+  json.red_flags = json.red_flags.slice(0, 3);
+  json.symptom_events = json.symptom_events.slice(0, 3);
+  json.caregiver_observations = json.caregiver_observations.slice(0, 2);
+  json.suggested_questions = json.suggested_questions.slice(0, 3);
 
   const report = {
     id: uid("r"),

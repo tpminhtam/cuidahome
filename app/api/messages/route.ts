@@ -6,6 +6,8 @@ import { Lang } from "@/lib/types";
 // Care-circle chat (spec §2.2): messages stored in the sender's language and
 // rendered translated to each viewer's preference. Translations cached in db.
 
+const LANG_NAME: Record<Lang, string> = { en: "English", es: "Spanish", zh: "Chinese (Simplified)" };
+
 async function translate(text: string, from: Lang, to: Lang): Promise<string> {
   const client = getClient();
   const p = getDB().patient;
@@ -13,7 +15,7 @@ async function translate(text: string, from: Lang, to: Lang): Promise<string> {
     model: MODEL,
     max_tokens: 400,
     system: `Translate the caregiver chat message. Context: the family cares for ${p.name}, an ${p.age}-year-old MAN ("Papá"/"Dad") — resolve dropped subjects and pronouns to him unless the message clearly refers to someone else. Keep tone, emoji, and medical details exact. Output ONLY the translation, no quotes or commentary.`,
-    messages: [{ role: "user", content: `Translate from ${from} to ${to === "es" ? "Spanish" : "English"}:\n${text}` }],
+    messages: [{ role: "user", content: `Translate from ${LANG_NAME[from]} to ${LANG_NAME[to]}:\n${text}` }],
   });
   const block = res.content.find((b) => b.type === "text");
   return block && block.type === "text" ? block.text.trim() : text;

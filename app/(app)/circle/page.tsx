@@ -7,12 +7,14 @@ import { Message, User } from "@/lib/types";
 type DisplayMessage = Message & { display: string; translated: boolean };
 
 export default function Circle() {
-  const { state, user } = useApp();
+  const { state, user, uiLang } = useApp();
   const [msgs, setMsgs] = useState<DisplayMessage[]>([]);
   const [text, setText] = useState("");
   const [showOrig, setShowOrig] = useState<string | null>(null);
+  const [xlate, setXlate] = useState<"en" | "es" | "zh" | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
-  const lang = user?.lang ?? "en";
+  // the language this viewer READS in (translation target); writing language = same
+  const lang = xlate ?? uiLang;
 
   const load = useCallback(async () => {
     const res = await fetch(`/api/messages?lang=${lang}`, { cache: "no-store" });
@@ -50,7 +52,18 @@ export default function Circle() {
   return (
     <div className="flex flex-col h-full min-h-0">
       <div className="pb-2">
-        <h1 className="font-bold text-lg">{es ? "Círculo de cuidado" : "Care circle"}</h1>
+        <div className="flex items-center justify-between gap-2">
+          <h1 className="font-bold text-lg">{es ? "Círculo de cuidado" : "Care circle"}</h1>
+          <div className="flex gap-1 items-center">
+            <span className="text-[10px] text-muted">{es ? "Leo en" : "I read in"}</span>
+            {(["en", "es", "zh"] as const).map((l) => (
+              <button key={l} className="chip" onClick={() => setXlate(l)}
+                style={lang === l ? { background: "var(--teal)", color: "#fff", borderColor: "var(--teal)" } : {}}>
+                {l === "en" ? "EN" : l === "es" ? "ES" : "中文"}
+              </button>
+            ))}
+          </div>
+        </div>
         <p className="text-[11px] text-muted">
           {state.users.map((u) => `${u.avatar} ${u.name}`).join(" · ")} —{" "}
           {es ? "cada quien lee en su idioma" : "everyone reads in their own language"}

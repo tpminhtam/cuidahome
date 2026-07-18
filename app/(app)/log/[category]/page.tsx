@@ -10,7 +10,7 @@ const SYMPTOM_TAGS = ["fever", "pain", "shortness of breath", "confusion", "naus
 export default function LogPage({ params }: { params: Promise<{ category: string }> }) {
   const { category } = use(params) as { category: Category };
   const router = useRouter();
-  const { user, refresh } = useApp();
+  const { user, refresh, uiLang } = useApp();
   const cat = CATEGORIES.find((c) => c.key === category);
   const [data, setData] = useState<Record<string, unknown>>({});
   const [note, setNote] = useState("");
@@ -18,7 +18,7 @@ export default function LogPage({ params }: { params: Promise<{ category: string
   const [busy, setBusy] = useState(false);
 
   if (!cat || !user) return <p className="text-muted text-sm p-6 text-center">…</p>;
-  const es = user.lang === "es";
+  const es = uiLang === "es";
   const set = (k: string, v: unknown) => setData((d) => ({ ...d, [k]: v }));
 
   async function submit() {

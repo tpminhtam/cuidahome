@@ -48,8 +48,10 @@ export default function VoicePage() {
   const convoRef = useRef<unknown[]>([]);
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  const effLang: Lang = lang ?? user?.lang ?? "en";
+  // English-first; the caregiver picks their spoken language explicitly
+  const effLang: Lang = lang ?? "en";
   const es = effLang === "es";
+  const SPEECH_LANG: Record<Lang, string> = { en: "en-US", es: "es-US", zh: "zh-CN" };
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: 99999, behavior: "smooth" });
@@ -59,7 +61,7 @@ export default function VoicePage() {
     try {
       window.speechSynthesis.cancel();
       const u = new SpeechSynthesisUtterance(text);
-      u.lang = es ? "es-US" : "en-US";
+      u.lang = SPEECH_LANG[effLang];
       u.rate = 1.02;
       window.speechSynthesis.speak(u);
     } catch {
@@ -112,7 +114,7 @@ export default function VoicePage() {
     }
     window.speechSynthesis?.cancel();
     const rec = new Ctor();
-    rec.lang = es ? "es-US" : "en-US";
+    rec.lang = SPEECH_LANG[effLang];
     rec.continuous = true;
     rec.interimResults = true;
     finalRef.current = "";
@@ -151,14 +153,14 @@ export default function VoicePage() {
           </p>
         </div>
         <div className="flex gap-1">
-          {(["en", "es"] as Lang[]).map((l) => (
+          {(["en", "es", "zh"] as Lang[]).map((l) => (
             <button
               key={l}
               onClick={() => setLang(l)}
               className="chip"
               style={effLang === l ? { background: "var(--teal)", color: "#fff", borderColor: "var(--teal)" } : {}}
             >
-              {l === "en" ? "EN" : "ES"}
+              {l === "en" ? "EN" : l === "es" ? "ES" : "中文"}
             </button>
           ))}
         </div>

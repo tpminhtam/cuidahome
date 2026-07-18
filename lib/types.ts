@@ -1,6 +1,6 @@
 // CuidaHome core types — mirrors Product Spec §2.1 (nine logging categories)
 
-export type Lang = "en" | "es";
+export type Lang = "en" | "es" | "zh";
 
 export type Role = "admin" | "caregiver" | "viewer";
 

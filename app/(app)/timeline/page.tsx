@@ -6,10 +6,10 @@ import { fmtDay, useApp } from "@/components/useApp";
 import { CATEGORIES, Category } from "@/lib/types";
 
 export default function Timeline() {
-  const { state, user } = useApp();
+  const { state, user, uiLang } = useApp();
   const [filter, setFilter] = useState<Category | "all" | "flagged">("all");
   if (!state || !user) return <p className="text-muted text-sm p-6 text-center">Loading…</p>;
-  const es = user.lang === "es";
+  const es = uiLang === "es";
 
   const entries = state.entries.filter((e) =>
     filter === "all" ? true : filter === "flagged" ? e.flags.length > 0 : e.category === filter

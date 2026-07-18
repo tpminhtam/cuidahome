@@ -5,10 +5,10 @@ import { CATEGORIES } from "@/lib/types";
 import { fmtDay, fmtTime, timeAgo, useApp } from "@/components/useApp";
 
 export default function Home() {
-  const { state, user } = useApp();
+  const { state, user, uiLang } = useApp();
   if (!state || !user) return <p className="text-muted text-sm p-6 text-center">Loading…</p>;
 
-  const es = user.lang === "es";
+  const es = uiLang === "es";
   const p = state.patient;
   const recentFlags = state.entries
     .filter((e) => e.flags.length && Date.now() - new Date(e.ts).getTime() < 48 * 3600e3)
@@ -22,19 +22,21 @@ export default function Home() {
 
   return (
     <div className="space-y-3">
-      {/* patient card */}
+      {/* patient card — deliberately light on clinical detail (Dr.'s feedback #4) */}
       <section className="card p-4 flex items-center gap-3">
         <span className="text-4xl">{p.photo}</span>
-        <div className="min-w-0">
+        <div className="min-w-0 flex-1">
           <h1 className="font-bold text-lg leading-tight">{p.name}</h1>
           <p className="text-xs text-muted">
-            {p.age} · {p.conditions[0]} · {p.conditions[1]}
-          </p>
-          <p className="text-[11px] text-muted mt-0.5">
-            {todayCount} {es ? "registros hoy" : "entries today"} ·{" "}
-            {lastBP ? `BP ${(lastBP.data as { systolic: number; diastolic: number }).systolic}/${(lastBP.data as { systolic: number; diastolic: number }).diastolic} ${timeAgo(lastBP.ts)}` : ""}
+            {p.age} {es ? "años" : "years"} · {todayCount} {es ? "registros hoy" : "entries today"}
+            {lastBP
+              ? ` · BP ${(lastBP.data as { systolic: number; diastolic: number }).systolic}/${(lastBP.data as { systolic: number; diastolic: number }).diastolic} ${timeAgo(lastBP.ts)}`
+              : ""}
           </p>
         </div>
+        <Link href="/meds" className="chip shrink-0" style={{ background: "var(--teal-soft)", color: "var(--teal)", borderColor: "#c8ded9" }}>
+          💊 {es ? "Medicinas" : "Med list"}
+        </Link>
       </section>
 
       {/* alerts */}

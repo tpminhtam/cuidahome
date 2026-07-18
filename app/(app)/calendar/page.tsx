@@ -8,9 +8,9 @@ const TYPE_ICON: Record<string, string> = {
 };
 
 export default function CalendarPage() {
-  const { state, user } = useApp();
+  const { state, user, uiLang } = useApp();
   if (!state || !user) return <p className="text-muted text-sm p-6 text-center">Loading…</p>;
-  const es = user.lang === "es";
+  const es = uiLang === "es";
   const upcoming = state.appointments.filter((a) => !a.completed && new Date(a.ts) >= new Date());
   const past = state.appointments.filter((a) => a.completed || new Date(a.ts) < new Date());
 

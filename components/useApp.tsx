@@ -18,13 +18,20 @@ interface Ctx {
   refresh: () => Promise<void>;
   user: User | null;
   setUserId: (id: string) => void;
+  uiLang: "en" | "es";
+  setUiLang: (l: "en" | "es") => void;
 }
 
-const AppCtx = createContext<Ctx>({ state: null, refresh: async () => {}, user: null, setUserId: () => {} });
+const AppCtx = createContext<Ctx>({
+  state: null, refresh: async () => {}, user: null, setUserId: () => {},
+  uiLang: "en", setUiLang: () => {},
+});
 
 export function AppProvider({ children }: { children: React.ReactNode }) {
   const [state, setState] = useState<AppState | null>(null);
   const [userId, setUserIdRaw] = useState<string>("u_maria");
+  // App is English-first; language is an explicit setting, never inferred (Dr.'s feedback #1)
+  const [uiLang, setUiLangRaw] = useState<"en" | "es">("en");
 
   const refresh = useCallback(async () => {
     const res = await fetch("/api/state", { cache: "no-store" });
@@ -34,6 +41,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const saved = localStorage.getItem("ch_uid");
     if (saved) setUserIdRaw(saved);
+    const savedLang = localStorage.getItem("ch_lang");
+    if (savedLang === "es" || savedLang === "en") setUiLangRaw(savedLang);
     refresh();
   }, [refresh]);
 
@@ -41,10 +50,14 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem("ch_uid", id);
     setUserIdRaw(id);
   };
+  const setUiLang = (l: "en" | "es") => {
+    localStorage.setItem("ch_lang", l);
+    setUiLangRaw(l);
+  };
 
   const user = state?.users.find((u) => u.id === userId) ?? state?.users[0] ?? null;
 
-  return <AppCtx.Provider value={{ state, refresh, user, setUserId }}>{children}</AppCtx.Provider>;
+  return <AppCtx.Provider value={{ state, refresh, user, setUserId, uiLang, setUiLang }}>{children}</AppCtx.Provider>;
 }
 
 export const useApp = () => useContext(AppCtx);

@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { AppProvider, useApp } from "./useApp";
 
 function Header() {
-  const { state, user, setUserId } = useApp();
+  const { state, user, setUserId, uiLang, setUiLang } = useApp();
   if (!state || !user) return <div className="h-14" />;
   return (
     <header className="no-print flex items-center justify-between px-4 pt-4 pb-2">
@@ -15,8 +15,16 @@ function Header() {
           Cuida<span className="text-teal">Home</span>
         </span>
       </Link>
-      <label className="flex items-center gap-1.5 text-xs text-muted">
-        <span className="hidden sm:inline">Logged in:</span>
+      <div className="flex items-center gap-1.5">
+        <select
+          className="card px-1.5 py-1 text-xs font-semibold"
+          value={uiLang}
+          onChange={(e) => setUiLang(e.target.value as "en" | "es")}
+          aria-label="App language"
+        >
+          <option value="en">EN</option>
+          <option value="es">ES</option>
+        </select>
         <select
           className="card px-2 py-1 text-sm font-semibold"
           value={user.id}
@@ -29,7 +37,7 @@ function Header() {
             </option>
           ))}
         </select>
-      </label>
+      </div>
     </header>
   );
 }

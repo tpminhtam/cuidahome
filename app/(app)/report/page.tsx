@@ -1,10 +1,13 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import Sparkline from "@/components/Sparkline";
 import { fmtDay, useApp } from "@/components/useApp";
 import { AgentStep, BPData, GlucoseData, Report, WeightData } from "@/lib/types";
 
+// The pre-visit report is a clinical document: ALWAYS English (Dr.'s feedback #3),
+// regardless of the app language setting.
 export default function ReportPage() {
   const { state, user } = useApp();
   const [report, setReport] = useState<Report | null>(null);
@@ -19,7 +22,6 @@ export default function ReportPage() {
   }, []);
 
   if (!state || !user) return <p className="text-muted text-sm p-6 text-center">Loading…</p>;
-  const es = user.lang === "es";
   const p = state.patient;
   const next = state.appointments.find((a) => !a.completed && new Date(a.ts) > new Date() && a.type === "primary_care");
 
@@ -62,38 +64,36 @@ export default function ReportPage() {
     <div className="space-y-3 pb-4">
       <div className="flex items-start justify-between gap-2">
         <div>
-          <h1 className="font-bold text-lg leading-tight">{es ? "Informe pre-visita" : "Pre-visit report"}</h1>
+          <h1 className="font-bold text-lg leading-tight">Pre-visit report</h1>
           <p className="text-[11px] text-muted">
             {p.name} · DOB {p.dob}
-            {next && <> · {es ? "cita" : "visit"}: {fmtDay(next.ts)} — {next.provider}</>}
+            {next && <> · visit: {fmtDay(next.ts)} — {next.provider}</>}
           </p>
         </div>
         <span className="text-2xl">🩺</span>
       </div>
 
-      {/* actions */}
       <div className="no-print flex gap-2">
         <button onClick={generate} disabled={busy} className="btn-primary flex-1 text-sm">
-          {busy ? (es ? "Generando…" : "Generating…") : report ? "↻ " + (es ? "Regenerar" : "Regenerate") : es ? "Generar informe" : "Generate report"}
+          {busy ? "Generating…" : report ? "↻ Regenerate" : "Generate report"}
         </button>
         {report && (
           <button onClick={() => window.print()} className="card px-3 text-sm font-semibold">
-            🖨 {es ? "Imprimir" : "Print"}
+            🖨 Print
           </button>
         )}
       </div>
       {err && <p className="card flag-urgent p-3 text-sm">{err}</p>}
 
-      {/* one-liner + red flags */}
       {j && (
         <>
           <section className="card p-4" style={{ background: "var(--teal-soft)" }}>
-            <p className="text-xs font-bold uppercase tracking-wide text-teal mb-1">{es ? "Lo esencial" : "The headline"}</p>
+            <p className="text-xs font-bold uppercase tracking-wide text-teal mb-1">The headline</p>
             <p className="text-sm font-semibold leading-snug">{j.one_liner}</p>
           </section>
           {j.red_flags.length > 0 && (
             <section className="card p-4 flag-urgent">
-              <p className="text-xs font-bold uppercase tracking-wide mb-2">🚩 {es ? "Señales de alerta" : "Red flags"}</p>
+              <p className="text-xs font-bold uppercase tracking-wide mb-2">🚩 Red flags</p>
               <ul className="space-y-1.5">
                 {j.red_flags.map((f, i) => (
                   <li key={i} className="text-sm leading-snug flex gap-1.5">
@@ -107,11 +107,8 @@ export default function ReportPage() {
         </>
       )}
 
-      {/* vitals trends — computed locally, never hallucinated */}
       <section className="card p-4">
-        <p className="text-xs font-bold uppercase tracking-wide text-muted mb-2">
-          {es ? "Tendencias desde la última visita" : "Trends since last visit"}
-        </p>
+        <p className="text-xs font-bold uppercase tracking-wide text-muted mb-2">Trends since last visit</p>
         <div className="space-y-3">
           <div>
             <div className="flex items-baseline justify-between">
@@ -139,7 +136,7 @@ export default function ReportPage() {
 
       {j && (
         <>
-          <Section title={es ? "Eventos de síntomas" : "Symptom events"}>
+          <Section title="Symptom events">
             <ul className="space-y-1">
               {j.symptom_events.map((s, i) => (
                 <li key={i} className="text-sm leading-snug">
@@ -148,17 +145,17 @@ export default function ReportPage() {
               ))}
             </ul>
           </Section>
-          <Section title={es ? "Ánimo y sueño" : "Mood & sleep"}>{j.mood_and_sleep}</Section>
-          <Section title={es ? "Alimentación" : "Nutrition"}>{j.nutrition}</Section>
-          <Section title={es ? "Medicamentos" : "Medications"}>{j.medications}</Section>
-          <Section title={es ? "Observaciones de la familia" : "In the family's words"}>
+          <Section title="Mood & sleep">{j.mood_and_sleep}</Section>
+          <Section title="Nutrition">{j.nutrition}</Section>
+          <Section title="Medications">{j.medications}</Section>
+          <Section title="In the family's words">
             <ul className="space-y-1.5">
               {j.caregiver_observations.map((o, i) => (
                 <li key={i} className="text-sm italic leading-snug">“{o}”</li>
               ))}
             </ul>
           </Section>
-          <Section title={es ? "Preguntas para la visita" : "Questions for this visit"}>
+          <Section title="Questions for this visit">
             <ul className="space-y-1 list-disc pl-4">
               {j.suggested_questions.map((q, i) => (
                 <li key={i} className="text-sm leading-snug">{q}</li>
@@ -166,15 +163,16 @@ export default function ReportPage() {
             </ul>
           </Section>
 
-          {/* computer-use send */}
+          <p className="no-print text-xs text-muted">
+            🧳 Bring: this report (printed) + the <Link className="underline" href="/meds">medication list</Link>.
+          </p>
+
           <section className="no-print card p-4" style={{ borderColor: "var(--terra)", borderWidth: 2 }}>
             <p className="text-xs font-bold uppercase tracking-wide mb-1" style={{ color: "var(--terra)" }}>
-              {es ? "Enviar al portal del médico" : "Send to the doctor's portal"}
+              Send to the doctor's portal
             </p>
             <p className="text-xs text-muted mb-2">
-              {es
-                ? "El agente abre el portal del paciente y envía este informe como mensaje — como lo haría un humano."
-                : "The agent opens the patient portal and sends this report as a message — the way a human would."}
+              The agent opens the patient portal and sends this report as a message — the way a human would.
             </p>
             <button
               onClick={sendToPortal}
@@ -182,7 +180,7 @@ export default function ReportPage() {
               className="w-full rounded-xl py-2.5 text-sm font-bold text-white"
               style={{ background: "var(--terra)" }}
             >
-              {run?.state === "running" ? (es ? "El agente está trabajando…" : "Agent is working…") : "🤖 " + (es ? "Enviar con el agente" : "Send with the agent")}
+              {run?.state === "running" ? "Agent is working…" : "🤖 Send with the agent"}
             </button>
             {run && (
               <div className="mt-2 space-y-1 max-h-44 overflow-y-auto">
@@ -194,7 +192,7 @@ export default function ReportPage() {
                 ))}
                 {run.state === "done" && (
                   <p className="text-xs font-bold" style={{ color: "var(--chart)" }}>
-                    ✓ {es ? "Enviado. Revisa la bandeja del portal." : "Sent. Check the portal outbox."}{" "}
+                    ✓ Sent. Check the portal outbox.{" "}
                     <a href="/portal/messages" target="_blank" className="underline">portal ↗</a>
                   </p>
                 )}
@@ -208,12 +206,10 @@ export default function ReportPage() {
       <p className="text-[10px] text-muted leading-snug pt-1">
         {report && (
           <>
-            Generated {new Date(report.generatedAt).toLocaleString()} · {es ? "Periodo" : "Period"}: {report.periodStart.slice(0, 10)} → {report.periodEnd.slice(0, 10)} ·{" "}
+            Generated {new Date(report.generatedAt).toLocaleString()} · Period: {report.periodStart.slice(0, 10)} → {report.periodEnd.slice(0, 10)} ·{" "}
           </>
         )}
-        {es
-          ? "Observaciones del hogar reportadas por la familia vía CuidaHome. No es un registro médico ni consejo médico."
-          : "Home observations reported by family caregivers via CuidaHome. Not a medical record and not medical advice."}
+        Home observations reported by family caregivers via CuidaHome. Not a medical record and not medical advice.
       </p>
     </div>
   );

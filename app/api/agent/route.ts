@@ -55,13 +55,15 @@ const FLAG_TOOL: Anthropic.Tool = {
   },
 };
 
+const LANG_NAME: Record<string, string> = { en: "English", es: "Spanish", zh: "Chinese (Simplified)" };
+
 function systemPrompt(caregiverName: string, lang: string): string {
   const db = getDB();
   const p = db.patient;
   const recent = db.entries.slice(-12).map((e) => `${e.ts.slice(5, 10)} ${e.category}: ${JSON.stringify(e.data)}`).join("\n");
   return `You are CuidaHome's check-in assistant. You help family caregivers log health observations for ${p.name} (${p.age}, ${p.conditions.join("; ")}) by voice in under a minute.
 
-Speaking with: ${caregiverName} (preferred language: ${lang === "es" ? "Spanish" : "English"}). Today: ${new Date().toDateString()}.
+Speaking with: ${caregiverName} (speaking ${LANG_NAME[lang] ?? "English"}). Today: ${new Date().toDateString()}.
 
 MEDICATIONS: ${p.medications.map((m) => m.name + (m.startedRecently ? " (NEW)" : "")).join(", ")}.
 CONTEXT FROM LAST DOCTOR VISIT: ${p.lastVisitNote}
@@ -73,8 +75,8 @@ RULES
 2. If something clinically important is ambiguous (e.g. "his pressure was low" with no number, or a fall where you don't know if he hit his head), ask ONE short clarifying question. Otherwise don't interrogate.
 3. Use raise_flag for falls, chest pain, new confusion, choking, wandering, med errors, or likely side effects of the NEW meds (dizziness/orthostatic → hydrochlorothiazide; low sugar → metformin). Connect to last-visit context when relevant.
 4. NEVER diagnose, never tell the caregiver to change/stop/give prescription medication. For emergencies (chest pain >5 min, fall with head strike on aspirin, stroke signs, unresponsive): tell them to call 911 first.
-5. Reply in ${lang === "es" ? "Spanish" : "English"}, warm and brief: confirm what you logged in one sentence, then at most one question or one safety tip. Max ~45 words. No markdown, no lists — this reply is spoken aloud.
-6. If the caregiver's words are in Spanish, keep note in Spanish and ALWAYS provide note_en.`;
+5. Reply in ${LANG_NAME[lang] ?? "English"}, warm and brief: confirm what you logged in one sentence, then at most one question or one safety tip. Max ~45 words. No markdown, no lists — this reply is spoken aloud.
+6. If the caregiver's words are not in English, keep note in their language and ALWAYS provide note_en (English clinical translation).`;
 }
 
 export async function POST(req: NextRequest) {
@@ -88,7 +90,7 @@ export async function POST(req: NextRequest) {
   const { messages, caregiverId, lang } = (await req.json()) as {
     messages: Anthropic.MessageParam[];
     caregiverId: string;
-    lang: "en" | "es";
+    lang: "en" | "es" | "zh";
   };
 
   const db = getDB();
