@@ -787,6 +787,56 @@
    "lang": "es",
    "source": "seed",
    "flags": []
+  },
+  {
+   "id": "e_mrqwe9ndc0w242",
+   "ts": "2026-07-18T21:47:47.161Z",
+   "createdAt": "2026-07-18T21:47:47.161Z",
+   "category": "meals",
+   "data": {
+    "meal_type": "breakfast",
+    "completion_pct": 50
+   },
+   "note": "he finished half of his breakfast",
+   "lang": "en",
+   "caregiverId": "u_maria",
+   "source": "voice",
+   "flags": []
+  },
+  {
+   "id": "e_mrqwe9ndpb0x4w",
+   "ts": "2026-07-18T21:47:47.161Z",
+   "createdAt": "2026-07-18T21:47:47.161Z",
+   "category": "bowel",
+   "data": {
+    "count": 1
+   },
+   "note": "had some business today",
+   "lang": "en",
+   "caregiverId": "u_maria",
+   "source": "voice",
+   "flags": []
+  },
+  {
+   "id": "e_mrqwesecgxx5mf",
+   "ts": "2026-07-18T21:48:11.460Z",
+   "createdAt": "2026-07-18T21:48:11.460Z",
+   "category": "symptoms",
+   "data": {
+    "tags": [
+     "dizziness"
+    ]
+   },
+   "note": "he had dizziness today (correcting earlier note)",
+   "lang": "en",
+   "caregiverId": "u_maria",
+   "source": "voice",
+   "flags": [
+    {
+     "severity": "watch",
+     "reason": "Dizziness — orthostatic pattern to watch (new HCTZ; office BP was 107/58)"
+    }
+   ]
   }
  ],
  "messages": [
@@ -796,11 +846,7 @@
    "fromId": "u_maria",
    "lang": "es",
    "text": "Papá amaneció mareado. Presión 104/60 — ya lo anoté en la app.",
-   "pinned": false,
-   "translations": {
-    "en": "Dad woke up dizzy. Blood pressure 104/60 — I already logged it in the app.",
-    "zh": "爸爸早上起来头晕。血压104/60——我已经记录到应用程序里了。"
-   }
+   "pinned": false
   },
   {
    "id": "m2",
@@ -808,11 +854,7 @@
    "fromId": "u_tam",
    "lang": "en",
    "text": "Heading to class — Rosa takes over at 2pm. She knows about the new BP pill. 🤝",
-   "pinned": false,
-   "translations": {
-    "es": "Voy camino a clase — Rosa toma el relevo a las 2pm. Ella sabe sobre la nueva pastilla para la presión. 🤝",
-    "zh": "去上课了——罗莎下午2点接班。她知道新的降压药的事。🤝"
-   }
+   "pinned": false
   },
   {
    "id": "m3",
@@ -820,11 +862,7 @@
    "fromId": "u_maria",
    "lang": "es",
    "text": "Casi se cae al levantarse 😢 No se golpeó. Hay que decírselo a la Dra. Kim.",
-   "pinned": false,
-   "translations": {
-    "en": "He almost fell when getting up 😢 He didn't hit himself. We need to tell Dr. Kim.",
-    "zh": "起身时差点摔倒 😢 他没有撞到。得告诉Kim医生。"
-   }
+   "pinned": false
   },
   {
    "id": "m4",
@@ -832,11 +870,7 @@
    "fromId": "u_tam",
    "lang": "en",
    "text": "I've got him tomorrow morning — will check BP after breakfast and log it.",
-   "pinned": false,
-   "translations": {
-    "es": "Yo lo cuido mañana por la mañana — le voy a revisar la presión después del desayuno y la anoto.",
-    "zh": "明天早上我来照顾他——早饭后会量血压并记录下来。"
-   }
+   "pinned": false
   },
   {
    "id": "m5",
@@ -844,11 +878,7 @@
    "fromId": "u_maria",
    "lang": "es",
    "text": "📌 Lista de medicamentos actualizada. Las pastillas nuevas están en el pastillero azul.",
-   "pinned": true,
-   "translations": {
-    "en": "📌 Updated medication list. The new pills are in the blue pill organizer.",
-    "zh": "📌 药物清单已更新。新药片放在蓝色药盒里。"
-   }
+   "pinned": true
   }
  ],
  "appointments": [
@@ -881,44 +911,8 @@
    "notes": "Fasting OK to skip — not a lipid panel"
   }
  ],
- "reports": [
-  {
-   "id": "r_mrqvqgqj00nb25",
-   "appointmentId": "a_next",
-   "generatedAt": "2026-07-18T21:29:16.603Z",
-   "periodStart": "2026-07-08T17:00:00.000Z",
-   "periodEnd": "2026-07-18T21:29:16.603Z",
-   "json": {
-    "one_liner": "BP fell from 128/74 to 98/56 over 10 days; weight down 1.6 lb; one near-fall 7/18.",
-    "symptoms_line": "Dizziness 7/15, 7/18 (x2); knee pain 7/13; near-fall 7/18; nighttime wandering/confusion 7/17.",
-    "vitals": {
-     "blood_pressure": {
-      "summary": "First 128/74, last 98/56; range 98-128 systolic",
-      "trend": "falling"
-     },
-     "weight": {
-      "summary": "173.5 to 171.9 lb, down 1.6 lb",
-      "trend": "falling"
-     },
-     "glucose": {
-      "summary": "Range 68-92; fasting 68 on 7/16",
-      "trend": "falling"
-     }
-    },
-    "question_for_doctor": "Should we adjust or stop the hydrochlorothiazide given the dizziness and falling BP?"
-   }
-  }
- ],
- "portalOutbox": [
-  {
-   "id": "pm_mrqvr54z1iuxgw",
-   "ts": "2026-07-18T21:29:48.227Z",
-   "to": "Dr. Sarah Kim — Primary Care",
-   "subject": "Pre-visit summary — Isreal Howell (DOB 1939-03-20)",
-   "body": "PRE-VISIT SUMMARY (caregiver home observations via CuidaHome)\n\nBP fell from 128/74 to 98/56 over 10 days; weight down 1.6 lb; one near-fall 7/18.\n\nVITALS — BP: First 128/74, last 98/56; range 98-128 systolic | Weight: 173.5 to 171.9 lb, down 1.6 lb | Glucose: Range 68-92; fasting 68 on 7/16\nSYMPTOMS — Dizziness 7/15, 7/18 (x2); knee pain 7/13; near-fall 7/18; nighttime wandering/confusion 7/17.\n\nQUESTION — Should we adjust or stop the hydrochlorothiazide given the dizziness and falling BP?\n\nSent by Maria Alvarez (daughter, caregiver proxy). Full log with trend charts in CuidaHome.",
-   "from": "Maria Alvarez (caregiver proxy)"
-  }
- ],
+ "reports": [],
+ "portalOutbox": [],
  "portalRuns": [],
  "lessons": [
   {
@@ -943,6 +937,14 @@
    "scope": "baseline",
    "source": "seed",
    "text": "His BP has run 98–114 systolic since hydrochlorothiazide started — readings there are his current normal; still log, don't alarm."
+  },
+  {
+   "id": "l_mrqwectpj9bltq",
+   "ts": "2026-07-18T21:47:51.277Z",
+   "scope": "language",
+   "text": "When María says Isreal \"had some business\" she means he had a bowel movement — log as bowel movement.",
+   "source": "reflection",
+   "caregiverId": "u_maria"
   }
  ]
 }
