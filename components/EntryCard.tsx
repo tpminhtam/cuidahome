@@ -64,9 +64,10 @@ export default function EntryCard({ e, users, compact }: { e: Entry; users: User
           {e.noteEn && e.note !== e.noteEn && (
             <p className="text-[11px] text-muted mt-0.5 leading-snug">🌐 {e.noteEn}</p>
           )}
-          {e.flags.map((f, i) => (
-            <p key={i} className={`chip mt-1.5 ${f.severity === "urgent" ? "flag-urgent" : "flag-watch"}`}>
-              {f.severity === "urgent" ? "⚠" : "👁"} {f.reason}
+          {/* two-tier: only urgent flags are caregiver-visible; watch flags feed the clinician report */}
+          {e.flags.filter((f) => f.severity === "urgent").map((f, i) => (
+            <p key={i} className="chip mt-1.5" style={{ background: "var(--terra-soft)", color: "var(--terra)", borderColor: "#ecc9b5" }}>
+              📞 {f.reason}
             </p>
           ))}
           {who && (

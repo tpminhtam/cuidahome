@@ -6,8 +6,8 @@ import Sparkline from "@/components/Sparkline";
 import { fmtDay, useApp } from "@/components/useApp";
 import { AgentStep, BPData, GlucoseData, Report, WeightData } from "@/lib/types";
 
-// The pre-visit report is a clinical document: ALWAYS English (Dr.'s feedback #3),
-// regardless of the app language setting.
+// Clinical document: ALWAYS English, and at most 1/3 of a printed page —
+// one-liner, one flag, vital trends, one symptoms line, ONE question.
 export default function ReportPage() {
   const { state, user } = useApp();
   const [report, setReport] = useState<Report | null>(null);
@@ -86,25 +86,15 @@ export default function ReportPage() {
       {err && <p className="card flag-urgent p-3 text-sm">{err}</p>}
 
       {j && (
-        <>
-          <section className="card p-4" style={{ background: "var(--teal-soft)" }}>
-            <p className="text-xs font-bold uppercase tracking-wide text-teal mb-1">The headline</p>
-            <p className="text-sm font-semibold leading-snug">{j.one_liner}</p>
-          </section>
-          {j.red_flags.length > 0 && (
-            <section className="card p-4 flag-urgent">
-              <p className="text-xs font-bold uppercase tracking-wide mb-2">🚩 Red flags</p>
-              <ul className="space-y-1.5">
-                {j.red_flags.map((f, i) => (
-                  <li key={i} className="text-sm leading-snug flex gap-1.5">
-                    <span>{f.severity === "urgent" ? "⚠" : "👁"}</span>
-                    <span>{f.text}</span>
-                  </li>
-                ))}
-              </ul>
-            </section>
+        <section className="card p-4" style={{ background: "var(--teal-soft)" }}>
+          <p className="text-sm font-semibold leading-snug">{j.one_liner}</p>
+          {j.key_flag && (
+            <p className="text-sm mt-2 leading-snug">
+              <span className="font-bold" style={{ color: "var(--urgent)" }}>🚩 </span>
+              {j.key_flag}
+            </p>
           )}
-        </>
+        </section>
       )}
 
       <section className="card p-4">
@@ -136,32 +126,15 @@ export default function ReportPage() {
 
       {j && (
         <>
-          <Section title="Symptom events">
-            <ul className="space-y-1">
-              {j.symptom_events.map((s, i) => (
-                <li key={i} className="text-sm leading-snug">
-                  <span className="font-semibold">{s.date}</span> — {s.text}
-                </li>
-              ))}
-            </ul>
-          </Section>
-          <Section title="Mood & sleep">{j.mood_and_sleep}</Section>
-          <Section title="Nutrition">{j.nutrition}</Section>
-          <Section title="Medications">{j.medications}</Section>
-          <Section title="In the family's words">
-            <ul className="space-y-1.5">
-              {j.caregiver_observations.map((o, i) => (
-                <li key={i} className="text-sm italic leading-snug">“{o}”</li>
-              ))}
-            </ul>
-          </Section>
-          <Section title="Questions for this visit">
-            <ul className="space-y-1 list-disc pl-4">
-              {j.suggested_questions.map((q, i) => (
-                <li key={i} className="text-sm leading-snug">{q}</li>
-              ))}
-            </ul>
-          </Section>
+          <section className="card p-4">
+            <p className="text-xs font-bold uppercase tracking-wide text-muted mb-1">Symptoms</p>
+            <p className="text-sm leading-snug">{j.symptoms_line}</p>
+          </section>
+
+          <section className="card p-4" style={{ borderColor: "var(--teal)", borderWidth: 1.5 }}>
+            <p className="text-xs font-bold uppercase tracking-wide text-teal mb-1">Ask the doctor</p>
+            <p className="text-sm font-semibold leading-snug">{j.question_for_doctor}</p>
+          </section>
 
           <p className="no-print text-xs text-muted">
             🧳 Bring: this report (printed) + the <Link className="underline" href="/meds">medication list</Link>.
@@ -212,14 +185,5 @@ export default function ReportPage() {
         Home observations reported by family caregivers via CuidaHome. Not a medical record and not medical advice.
       </p>
     </div>
-  );
-}
-
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
-  return (
-    <section className="card p-4">
-      <p className="text-xs font-bold uppercase tracking-wide text-muted mb-1.5">{title}</p>
-      <div className="text-sm leading-relaxed">{children}</div>
-    </section>
   );
 }

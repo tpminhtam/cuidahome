@@ -4,47 +4,29 @@ import { BPData, Entry, GlucoseData, PreVisitReport, WeightData } from "@/lib/ty
 
 export const maxDuration = 120;
 
-// Structured-output schema mirroring PreVisitReport (strict-compatible)
+// ULTRA-SHORT report per the physician: 1/3 of a printed page MAX —
+// one-liner clinical summary, one symptoms line, vital trends, ONE question.
 const SCHEMA = {
   type: "object",
   additionalProperties: false,
-  required: ["one_liner", "red_flags", "vitals", "symptom_events", "mood_and_sleep", "nutrition", "medications", "caregiver_observations", "suggested_questions"],
+  required: ["one_liner", "key_flag", "symptoms_line", "vitals", "question_for_doctor"],
   properties: {
-    one_liner: { type: "string", description: "One sentence a physician reads first: the single most important change this period." },
-    red_flags: {
-      type: "array",
-      items: {
-        type: "object", additionalProperties: false, required: ["severity", "text"],
-        properties: { severity: { type: "string", enum: ["urgent", "watch"] }, text: { type: "string" } },
-      },
-    },
+    one_liner: { type: "string", description: "≤22 words. The single most important clinical change this period, quantified." },
+    key_flag: { type: "string", description: "≤16 words. The ONE most important red flag, or empty string if none." },
+    symptoms_line: { type: "string", description: "≤18 words. One line summarizing symptom events with counts/dates." },
     vitals: {
       type: "object", additionalProperties: false, required: ["blood_pressure", "weight", "glucose"],
-      properties: {
-        blood_pressure: vitalsShape(), weight: vitalsShape(), glucose: vitalsShape(),
-      },
+      properties: { blood_pressure: vitalsShape(), weight: vitalsShape(), glucose: vitalsShape() },
     },
-    symptom_events: {
-      type: "array",
-      items: {
-        type: "object", additionalProperties: false, required: ["date", "text"],
-        properties: { date: { type: "string" }, text: { type: "string" } },
-      },
-    },
-    mood_and_sleep: { type: "string" },
-    nutrition: { type: "string" },
-    medications: { type: "string" },
-    caregiver_observations: { type: "array", items: { type: "string" }, description: "Direct caregiver quotes (English), most clinically telling first" },
-    suggested_questions: { type: "array", items: { type: "string" }, description: "3-5 questions the caregiver should ask at this visit" },
+    question_for_doctor: { type: "string", description: "≤15 words. EXACTLY ONE practical question for the physician." },
   },
 } as const;
 
 function vitalsShape() {
   return {
-    type: "object", additionalProperties: false, required: ["readings", "summary", "trend"],
+    type: "object", additionalProperties: false, required: ["summary", "trend"],
     properties: {
-      readings: { type: "integer" },
-      summary: { type: "string" },
+      summary: { type: "string", description: "≤10 words, with the actual numbers" },
       trend: { type: "string", enum: ["rising", "falling", "stable"] },
     },
   };
@@ -54,10 +36,9 @@ function digestEntries(entries: Entry[]): string {
   return entries
     .map((e) => {
       const day = e.ts.slice(0, 10);
-      const who = e.caregiverId.replace("u_", "");
       const flags = e.flags.length ? ` FLAGS[${e.flags.map((f) => `${f.severity}:${f.reason}`).join(" | ")}]` : "";
       const note = e.noteEn ?? e.note ?? "";
-      return `${day} ${e.category} ${JSON.stringify(e.data)}${note ? ` note:"${note}"` : ""} by:${who}${flags}`;
+      return `${day} ${e.category} ${JSON.stringify(e.data)}${note ? ` note:"${note}"` : ""}${flags}`;
     })
     .join("\n");
 }
@@ -108,24 +89,19 @@ PRECOMPUTED STATS (use these numbers exactly): ${JSON.stringify(stats)}
 HOME OBSERVATIONS (structured log by family caregivers, chronological):
 ${digestEntries(entries)}
 
-Write for a physician with 30 seconds: specific, quantified, no filler, connect findings to the medication changes from last visit where the data supports it.
-
-LANGUAGE: This is a clinical document — write it ENTIRELY in English regardless of the languages in the log. Translate caregiver quotes to English.
-
-HARD BUDGETS (the doctor asked for a scannable half-page):
-- one_liner: ≤22 words.
-- red_flags: the 3 MOST important only, each ≤20 words. Fold related findings together (e.g. BP downtrend + dizziness + near-fall = one flag).
-- vitals summaries: ≤12 words each.
-- symptom_events: top 3 only, each ≤12 words.
-- mood_and_sleep ≤25 words; nutrition ≤15 words; medications ≤18 words.
-- caregiver_observations: the 2 most telling quotes.
-- suggested_questions: exactly 3, each ≤15 words.`;
+The physician wants a THIRD OF A PAGE, scannable in 15 seconds, ENTIRELY in English:
+- one_liner: the single most important clinical change, quantified, connected to last visit's medication changes where the data supports it (≤22 words).
+- key_flag: the ONE most important red flag (≤16 words); "" if truly none.
+- symptoms_line: one line covering the symptom events with counts (≤18 words).
+- vitals summaries: ≤10 words each, real numbers.
+- question_for_doctor: EXACTLY ONE practical question (≤15 words).
+No filler. Facts only from the log.`;
 
   const res = await client.messages.create({
     model: MODEL,
-    max_tokens: 3000,
+    max_tokens: 1500,
     system:
-      "You generate pre-visit clinical summaries from caregiver home observations for CuidaHome. Facts only from the provided log — never invent values. Concise clinical register, but readable by the family too.",
+      "You generate ultra-concise pre-visit clinical summaries from caregiver home observations for CuidaHome. English only. Facts only from the provided log — never invent values.",
     messages: [{ role: "user", content: prompt }],
     output_config: { format: { type: "json_schema", schema: SCHEMA as unknown as Record<string, unknown> } },
   });
@@ -133,11 +109,6 @@ HARD BUDGETS (the doctor asked for a scannable half-page):
   const block = res.content.find((b) => b.type === "text");
   if (!block || block.type !== "text") return Response.json({ error: "no_output" }, { status: 500 });
   const json = JSON.parse(block.text) as PreVisitReport;
-  // enforce the brevity caps server-side too
-  json.red_flags = json.red_flags.slice(0, 3);
-  json.symptom_events = json.symptom_events.slice(0, 3);
-  json.caregiver_observations = json.caregiver_observations.slice(0, 2);
-  json.suggested_questions = json.suggested_questions.slice(0, 3);
 
   const report = {
     id: uid("r"),

@@ -149,21 +149,19 @@ export interface Report {
   json: PreVisitReport;
 }
 
-// Structured output schema target for Claude
+// Structured output schema target for Claude.
+// Per the physician's direction: 1/3 of a printed page MAX — a one-liner,
+// one symptoms line, vital trends, one key flag, ONE question.
 export interface PreVisitReport {
   one_liner: string;
-  red_flags: { severity: "urgent" | "watch"; text: string }[];
+  key_flag: string; // single most important red flag; "" if none
+  symptoms_line: string;
   vitals: {
-    blood_pressure: { readings: number; summary: string; trend: "rising" | "falling" | "stable" };
-    weight: { readings: number; summary: string; trend: "rising" | "falling" | "stable" };
-    glucose: { readings: number; summary: string; trend: "rising" | "falling" | "stable" };
+    blood_pressure: { summary: string; trend: "rising" | "falling" | "stable" };
+    weight: { summary: string; trend: "rising" | "falling" | "stable" };
+    glucose: { summary: string; trend: "rising" | "falling" | "stable" };
   };
-  symptom_events: { date: string; text: string }[];
-  mood_and_sleep: string;
-  nutrition: string;
-  medications: string;
-  caregiver_observations: string[];
-  suggested_questions: string[];
+  question_for_doctor: string;
 }
 
 export interface Thresholds {

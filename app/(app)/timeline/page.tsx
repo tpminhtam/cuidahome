@@ -12,7 +12,11 @@ export default function Timeline() {
   const es = uiLang === "es";
 
   const entries = state.entries.filter((e) =>
-    filter === "all" ? true : filter === "flagged" ? e.flags.length > 0 : e.category === filter
+    filter === "all"
+      ? true
+      : filter === "flagged"
+        ? e.flags.some((f) => f.severity === "urgent")
+        : e.category === filter
   );
 
   const byDay = new Map<string, typeof entries>();
@@ -31,8 +35,8 @@ export default function Timeline() {
           {es ? "Todo" : "All"}
         </button>
         <button className="chip shrink-0" onClick={() => setFilter("flagged")}
-          style={filter === "flagged" ? { background: "var(--urgent)", color: "#fff", borderColor: "var(--urgent)" } : {}}>
-          ⚠ {es ? "Alertas" : "Flagged"}
+          style={filter === "flagged" ? { background: "var(--terra)", color: "#fff", borderColor: "var(--terra)" } : {}}>
+          📞 {es ? "Para avisar" : "Care team"}
         </button>
         {CATEGORIES.map((c) => (
           <button key={c.key} className="chip shrink-0" onClick={() => setFilter(c.key)}

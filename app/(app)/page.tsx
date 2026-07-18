@@ -10,10 +10,11 @@ export default function Home() {
 
   const es = uiLang === "es";
   const p = state.patient;
-  const recentFlags = state.entries
-    .filter((e) => e.flags.length && Date.now() - new Date(e.ts).getTime() < 48 * 3600e3)
-    .flatMap((e) => e.flags.map((f) => ({ ...f, ts: e.ts })));
-  const urgent = recentFlags.filter((f) => f.severity === "urgent");
+  // two-tier visibility: caregivers see URGENT flags only (calm, actionable);
+  // watch-level signals stay silent and surface in the clinician report
+  const urgent = state.entries
+    .filter((e) => Date.now() - new Date(e.ts).getTime() < 48 * 3600e3)
+    .flatMap((e) => e.flags.filter((f) => f.severity === "urgent").map((f) => ({ ...f, ts: e.ts })));
   const upcoming = state.appointments.filter((a) => !a.completed && new Date(a.ts) > new Date());
   const nextAppt = upcoming.find((a) => a.type === "primary_care") ?? upcoming[0];
   const hoursToAppt = nextAppt ? (new Date(nextAppt.ts).getTime() - Date.now()) / 3600e3 : Infinity;
@@ -39,16 +40,17 @@ export default function Home() {
         </Link>
       </section>
 
-      {/* alerts */}
-      {recentFlags.length > 0 && (
-        <section className={`card p-3 ${urgent.length ? "flag-urgent" : "flag-watch"}`}>
-          <p className="text-xs font-bold uppercase tracking-wide mb-1">
-            {urgent.length ? (es ? "⚠ Atención" : "⚠ Needs attention") : es ? "En observación" : "Watching"}
+      {/* urgent-only, calmly worded (Dr.'s two-tier design) */}
+      {urgent.length > 0 && (
+        <section className="card p-3" style={{ background: "var(--terra-soft)", borderColor: "#ecc9b5" }}>
+          <p className="text-xs font-bold uppercase tracking-wide mb-1" style={{ color: "var(--terra)" }}>
+            📞 {es ? "Vale la pena avisar al equipo médico" : "Worth telling the care team"}
           </p>
-          <p className="text-sm leading-snug">{(urgent[0] ?? recentFlags[0]).reason}</p>
-          {recentFlags.length > 1 && (
-            <Link href="/timeline" className="text-xs underline mt-1 inline-block">
-              +{recentFlags.length - 1} {es ? "más en el registro" : "more in the log"}
+          <p className="text-sm leading-snug">{urgent[0].reason}</p>
+          {urgent[0].advice && <p className="text-xs text-muted mt-1">{urgent[0].advice}</p>}
+          {urgent.length > 1 && (
+            <Link href="/timeline" className="text-xs underline mt-1 inline-block" style={{ color: "var(--terra)" }}>
+              +{urgent.length - 1} {es ? "más en el registro" : "more in the log"}
             </Link>
           )}
         </section>

@@ -43,7 +43,7 @@ const LOG_TOOL: Anthropic.Tool = {
 const FLAG_TOOL: Anthropic.Tool = {
   name: "raise_flag",
   description:
-    "Raise a clinical red flag the care team should see, beyond automatic threshold alerts. Use for: falls, chest pain, new/worsening confusion, choking, wandering out of home, medication errors, possible medication side effects.",
+    "Two-tier alerting. severity='urgent' → SHOWN TO THE CAREGIVER: use ONLY for events that truly need medical attention now (fall, chest pain, choking with breathing trouble, unresponsiveness, dangerous medication error, absolutely abnormal vitals). Word it calmly — 'worth telling the care team' — never alarmist. severity='watch' → NEVER shown to the caregiver; a silent note for the doctor's pre-visit report (trends, patterns, possible side effects, mild new symptoms).",
   input_schema: {
     type: "object",
     properties: {
@@ -73,7 +73,7 @@ LAST ENTRIES:\n${recent}
 RULES
 1. Extract EVERY loggable fact into log_entries (one call, many entries). Numbers must be exact; never invent values. Omit any field you don't know — never fill unknowns with 0 or placeholders.
 2. If something clinically important is ambiguous (e.g. "his pressure was low" with no number, or a fall where you don't know if he hit his head), ask ONE short clarifying question. Otherwise don't interrogate.
-3. Use raise_flag for falls, chest pain, new confusion, choking, wandering, med errors, or likely side effects of the NEW meds (dizziness/orthostatic → hydrochlorothiazide; low sugar → metformin). Connect to last-visit context when relevant.
+3. raise_flag policy (the physician's own design — follow it exactly): 'urgent' ONLY for events needing medical attention now (fall, chest pain, choking with breathing trouble, unresponsive, dangerous med error, vitals beyond the alert thresholds) — calm wording, "worth telling the care team", never frightening. Everything else noteworthy (dizziness patterns, mild confusion, appetite decline, likely side effects of the NEW meds) → 'watch', which the caregiver never sees; it goes silently into the doctor's pre-visit report. Do NOT deliver watch-level concerns in your spoken reply either — just log and confirm warmly.
 4. NEVER diagnose, never tell the caregiver to change/stop/give prescription medication. For emergencies (chest pain >5 min, fall with head strike on aspirin, stroke signs, unresponsive): tell them to call 911 first.
 5. Reply in ${LANG_NAME[lang] ?? "English"}, warm and brief: confirm what you logged in one sentence, then at most one question or one safety tip. Max ~45 words. No markdown, no lists — this reply is spoken aloud.
 6. If the caregiver's words are not in English, keep note in their language and ALWAYS provide note_en (English clinical translation).`;

@@ -89,7 +89,7 @@ export function buildSeed(): DB {
     entry(2, 7, "glucose", { value: 68, context: "fasting" }, T, "en",
       {
         note: "He skipped breakfast before his walk again",
-        flags: [{ severity: "urgent", reason: "Glucose 68 mg/dL at or below 70 — hypoglycemia risk (new metformin); was counseled not to skip breakfast" }],
+        flags: [{ severity: "urgent", reason: "Blood sugar 68 is low", advice: "Give juice or food now and recheck in 15 minutes. Tell the care team it happened." }],
       }),
     entry(2, 8, "blood_pressure", { systolic: 104, diastolic: 60, pulse: 84 }, T, "en",
       { flags: [{ severity: "watch", reason: "BP trending low since hydrochlorothiazide was started (baseline 107/58 in office)" }] }),
@@ -108,7 +108,7 @@ export function buildSeed(): DB {
       {
         note: "Casi se cae al levantarse de la cama, se agarró de la cómoda. No se golpeó.",
         noteEn: "He nearly fell getting up from bed and caught himself on the dresser. No injury.",
-        flags: [{ severity: "urgent", reason: "Near-fall on standing — on aspirin; orthostatic pattern since HCTZ start", advice: "Sit on the edge of the bed before standing; tell the care team." }],
+        flags: [{ severity: "urgent", reason: "A near-fall was recorded (no injury)", advice: "Worth telling the care team. Have him sit at the edge of the bed for a moment before standing." }],
       }),
     entry(1, 20, "symptoms", { tags: ["dizziness", "fatigue"], severity: 6 }, T, "en",
       {
@@ -120,7 +120,7 @@ export function buildSeed(): DB {
     entry(1, 20, "weight", { value: 171.9 }, T, "en"),
     // ---------- today ----------
     entry(0, 8, "blood_pressure", { systolic: 98, diastolic: 56, pulse: 88 }, M, "es",
-      { flags: [{ severity: "watch", reason: "BP 98/56 — lowest reading since HCTZ started; approaching alert threshold" }] }),
+      { flags: [{ severity: "watch", reason: "BP 98/56 — lowest reading since HCTZ started" }] }),
     entry(0, 9, "symptoms", { tags: ["dizziness"], severity: 5 }, M, "es",
       {
         note: "Otra vez mareado al levantarse del desayuno",
@@ -159,7 +159,8 @@ export function buildSeed(): DB {
       allergies: ["No known drug allergies"],
       dietFlags: ["Diabetic diet"],
       thresholds: {
-        bp: { sysHigh: 180, sysLow: 95, diaHigh: 110, diaLow: 55 },
+        // caregiver-facing alerts fire ONLY at absolutely abnormal values (Dr.'s two-tier design)
+        bp: { sysHigh: 180, sysLow: 90, diaHigh: 110, diaLow: 50 },
         glucose: { low: 70, high: 300 },
         weightGain: { lbs: 3, days: 2 },
       },

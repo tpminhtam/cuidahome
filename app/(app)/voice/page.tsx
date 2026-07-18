@@ -89,8 +89,9 @@ export default function VoicePage() {
       convoRef.current = data.messages;
       const adds: Turn[] = [];
       if (data.entries?.length) adds.push({ kind: "entries", entries: data.entries });
+      // two-tier: only urgent flags surface to the caregiver
       const urgent = (data.flags as Flag[] | undefined)?.filter((f) => f.severity === "urgent") ?? [];
-      if (urgent.length) adds.push({ kind: "flags", flags: urgent });
+      if (urgent.length) adds.push({ kind: "flags", flags: urgent.slice(0, 1) });
       if (data.reply) adds.push({ kind: "assistant", text: data.reply });
       setTurns((t) => [...t, ...adds]);
       if (data.reply) speak(data.reply);
@@ -195,12 +196,14 @@ export default function VoicePage() {
             );
           if (t.kind === "flags")
             return (
-              <div key={i} className="card flag-urgent p-3">
-                <p className="text-xs font-bold uppercase tracking-wide">⚠ {es ? "Alerta para el equipo" : "Alert for the care team"}</p>
+              <div key={i} className="card p-3" style={{ background: "var(--terra-soft)", borderColor: "#ecc9b5" }}>
+                <p className="text-xs font-bold uppercase tracking-wide" style={{ color: "var(--terra)" }}>
+                  📞 {es ? "Vale la pena avisar al equipo médico" : "Worth telling the care team"}
+                </p>
                 {t.flags.map((f, j) => (
                   <p key={j} className="text-sm mt-1 leading-snug">
                     {f.reason}
-                    {f.advice && <span className="block text-xs mt-0.5 opacity-90">→ {f.advice}</span>}
+                    {f.advice && <span className="block text-xs mt-0.5 text-muted">→ {f.advice}</span>}
                   </p>
                 ))}
               </div>

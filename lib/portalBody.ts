@@ -1,6 +1,6 @@
 import { DB } from "./types";
 
-// Plain-text rendering of the latest pre-visit report, sized for a portal message.
+// Plain-text rendering of the (1/3-page) pre-visit report for the portal message.
 export function composePortalMessage(db: DB): { subject: string; body: string } | null {
   const report = db.reports[db.reports.length - 1];
   if (!report) return null;
@@ -11,22 +11,17 @@ export function composePortalMessage(db: DB): { subject: string; body: string } 
   const subject = `Pre-visit summary — ${p.name} (DOB ${p.dob}) — visit ${next ? new Date(next.ts).toLocaleDateString() : "upcoming"}`;
 
   const lines: string[] = [
-    `PRE-VISIT SUMMARY (caregiver-reported home observations via CuidaHome)`,
-    `Patient: ${p.name}, DOB ${p.dob}. Period: ${report.periodStart.slice(0, 10)} to ${report.periodEnd.slice(0, 10)}.`,
+    `PRE-VISIT SUMMARY (caregiver home observations via CuidaHome, ${report.periodStart.slice(0, 10)} to ${report.periodEnd.slice(0, 10)})`,
     ``,
-    `HEADLINE: ${j.one_liner}`,
+    j.one_liner,
+    ...(j.key_flag ? [``, `FLAG: ${j.key_flag}`] : []),
     ``,
-    `RED FLAGS:`,
-    ...j.red_flags.map((f) => `- [${f.severity.toUpperCase()}] ${f.text}`),
+    `VITALS — BP: ${j.vitals.blood_pressure.summary} (${j.vitals.blood_pressure.trend}) | Weight: ${j.vitals.weight.summary} (${j.vitals.weight.trend}) | Glucose: ${j.vitals.glucose.summary} (${j.vitals.glucose.trend})`,
+    `SYMPTOMS — ${j.symptoms_line}`,
     ``,
-    `VITALS: BP — ${j.vitals.blood_pressure.summary} | Weight — ${j.vitals.weight.summary} | Glucose — ${j.vitals.glucose.summary}`,
+    `QUESTION — ${j.question_for_doctor}`,
     ``,
-    `SYMPTOMS: ${j.symptom_events.map((s) => `${s.date}: ${s.text}`).join("; ")}`,
-    `MOOD/SLEEP: ${j.mood_and_sleep}`,
-    `NUTRITION: ${j.nutrition}`,
-    `MEDICATIONS: ${j.medications}`,
-    ``,
-    `Sent by Maria Alvarez (daughter, caregiver proxy). Full log with trend charts available in CuidaHome.`,
+    `Sent by Maria Alvarez (daughter, caregiver proxy). Full log with trend charts in CuidaHome.`,
   ];
   return { subject, body: lines.join("\n") };
 }
