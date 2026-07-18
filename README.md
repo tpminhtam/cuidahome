@@ -33,7 +33,7 @@ npm run dev
 1. Home → red-flag strip (near-fall, BP trending low since HCTZ started at last visit).
 2. 🎙 Voice check-in (ES or EN): *"Papá se mareó otra vez… la presión 98 con 56…"* → watch structured entries + alerts appear.
 3. Report → Generate → red flags + trends → **Send with the agent** → watch the browser drive the portal.
-4. Portal Messages → the summary is in Dr. Kim's inbox.
+4. Portal Messages → the summary is in Dr. Nguyen's inbox.
 
 ## Stack
 Next.js 16 · Claude Opus 4.8 (`claude-opus-4-8`, adaptive thinking, tool use, structured outputs, computer use `computer_20251124`) · Playwright · Web Speech API · JSON store (hackathon-grade).

@@ -165,7 +165,7 @@ export function buildSeed(): DB {
         weightGain: { lbs: 3, days: 2 },
       },
       lastVisitNote:
-        "Last PCP visit (10 days ago, Dr. Sarah Kim): started hydrochlorothiazide 25 mg for BP (office BP was 107/58 — told to monitor for orthostatic symptoms/dizziness) and metformin XR 500 mg for new type 2 diabetes (fasting glucose ran 66 — counseled not to skip breakfast before morning walks). Potassium 5.16 at upper margin on losartan; repeat labs due. Duplicate statin removed at medication reconciliation. Return sooner for chest pain, dizziness, or medication intolerance.",
+        "Last PCP visit (10 days ago, Dr. Tu Nguyen): started hydrochlorothiazide 25 mg for BP (office BP was 107/58 — told to monitor for orthostatic symptoms/dizziness) and metformin XR 500 mg for new type 2 diabetes (fasting glucose ran 66 — counseled not to skip breakfast before morning walks). Potassium 5.16 at upper margin on losartan; repeat labs due. Duplicate statin removed at medication reconciliation. Return sooner for chest pain, dizziness, or medication intolerance.",
     },
     users: [
       { id: "u_maria", name: "María", relation: "Daughter · primary caregiver", role: "admin", lang: "es", avatar: "👩🏽" },
@@ -177,18 +177,18 @@ export function buildSeed(): DB {
     messages: [
       { id: "m1", ts: d(2, 8), fromId: "u_maria", lang: "es", text: "Papá amaneció mareado. Presión 104/60 — ya lo anoté en la app.", pinned: false },
       { id: "m2", ts: d(2, 13), fromId: "u_tam", lang: "en", text: "Heading to class — Rosa takes over at 2pm. She knows about the new BP pill. 🤝", pinned: false },
-      { id: "m3", ts: d(1, 20), fromId: "u_maria", lang: "es", text: "Casi se cae al levantarse 😢 No se golpeó. Hay que decírselo a la Dra. Kim.", pinned: false },
+      { id: "m3", ts: d(1, 20), fromId: "u_maria", lang: "es", text: "Casi se cae al levantarse 😢 No se golpeó. Hay que decírselo a la Dra. Nguyen.", pinned: false },
       { id: "m4", ts: d(1, 21), fromId: "u_tam", lang: "en", text: "I've got him tomorrow morning — will check BP after breakfast and log it.", pinned: false },
       { id: "m5", ts: d(9, 10), fromId: "u_maria", lang: "es", text: "📌 Lista de medicamentos actualizada. Las pastillas nuevas están en el pastillero azul.", pinned: true },
     ],
     appointments: [
       {
-        id: "a_last", ts: d(10, 10), provider: "Dr. Sarah Kim", specialty: "Primary Care",
+        id: "a_last", ts: d(10, 10), provider: "Dr. Tu Nguyen", specialty: "Primary Care",
         location: "Bayview Health Medical Group", type: "primary_care", completed: true,
         visitSummary: "Started HCTZ 25 mg + metformin XR 500 mg. Monitor dizziness. Labs due at next visit.",
       },
       {
-        id: "a_next", ts: plus(2, 10), provider: "Dr. Sarah Kim", specialty: "Primary Care",
+        id: "a_next", ts: plus(2, 10), provider: "Dr. Tu Nguyen", specialty: "Primary Care",
         location: "Bayview Health Medical Group", type: "primary_care",
         notes: "Bring BP log · ask about dizziness since new pill · flu shot?",
       },

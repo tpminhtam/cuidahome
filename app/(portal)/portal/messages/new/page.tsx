@@ -9,7 +9,7 @@ const input: React.CSSProperties = {
 };
 
 const RECIPIENTS = [
-  { name: "Dr. Sarah Kim — Primary Care", initials: "SK", note: "Your primary care office" },
+  { name: "Dr. Tu Nguyen — Primary Care", initials: "TN", note: "Your primary care office" },
   { name: "Nurse line — Bayview Primary Care", initials: "RN", note: "Non-urgent nursing questions" },
   { name: "Pharmacy — Bayview", initials: "Rx", note: "Refills and medication questions" },
 ];

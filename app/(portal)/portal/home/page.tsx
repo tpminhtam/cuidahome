@@ -33,7 +33,7 @@ export default function PortalHome() {
         <div style={{ display: "flex", gap: 14, alignItems: "center" }}>
           <span style={circle("#f3e8f8")}>🩺</span>
           <div style={{ fontSize: 13, color: "#605e5c" }}>
-            <b style={{ color: "#252423", fontSize: 14 }}>Dr. Sarah Kim — Primary Care</b>
+            <b style={{ color: "#252423", fontSize: 14 }}>Dr. Tu Nguyen — Primary Care</b>
             <br />Monday 10:00 AM · Bayview Health Medical Group
           </div>
         </div>
