@@ -10,5 +10,6 @@ export async function GET() {
     messages: db.messages,
     portalOutbox: db.portalOutbox,
     reports: db.reports,
+    lessons: [...db.lessons].sort((a, b) => b.ts.localeCompare(a.ts)),
   });
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
-import { Appointment, Entry, Message, Patient, PortalMessage, Report, User } from "@/lib/types";
+import { Appointment, Entry, Lesson, Message, Patient, PortalMessage, Report, User } from "@/lib/types";
 
 export interface AppState {
   patient: Patient;
@@ -11,6 +11,7 @@ export interface AppState {
   messages: Message[];
   portalOutbox: PortalMessage[];
   reports: Report[];
+  lessons: Lesson[];
 }
 
 interface Ctx {
@@ -54,6 +55,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         messages: db.messages,
         portalOutbox: db.portalOutbox,
         reports: db.reports,
+        lessons: [...(db.lessons ?? [])].sort((a: { ts: string }, b: { ts: string }) => b.ts.localeCompare(a.ts)),
       });
       setDemoMode(true);
     }

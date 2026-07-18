@@ -14,7 +14,9 @@ Built in one day at *The Future of Agentic AI in Healthcare* (Abridge × Anthrop
 - **🚨 Alert engine:** configurable thresholds (per spec §2.1) evaluated server-side on every entry — hypotension on a new diuretic, hypoglycemia on new metformin, falls, choking, weight jumps.
 - **💬 Care circle with live translation:** María writes in Spanish, Tam reads it in English — every message rendered in each member's language.
 - **🩺 Pre-visit report:** deterministic trend math + Claude structured output → red flags first, one-liner headline, vitals sparklines, caregiver quotes, suggested questions. Printable.
-- **🤖 Computer-use "send to portal":** the spec deferred portal integration to Phase 2 (Epic MyChart). Our agent does it *today* with zero integration: Claude computer-use opens the (fictional) Bayview Health patient portal in a real browser, logs in, composes a message to the PCP, pastes the summary, and hits Send — on screen, cursor moving.
+- **🤖 Computer-use "send to portal":** the spec deferred portal integration to Phase 2 (Epic MyChart). Our agent does it *today* with zero integration: Claude computer-use opens the (fictional) "BayChart" patient portal in a real browser, logs in, composes a message to the PCP, pastes the summary, and hits Send — on screen, cursor moving.
+- **🧠 Continual learning (agentic memory + reflection):** after every check-in, a reflection pass distills reusable lessons — the family's personal phrases ("su licuado" = the protein shake Tam makes), the patient's evolving baselines, household routines — into a per-family memory that feeds every future conversation. The week-4 companion understands this family better than the day-1 one, with **no weight updates and full human-in-the-loop governance**: every learned item is visible and deletable in the app, and urgent clinical alert rules never self-modify.
+- **🗣 Neural voice:** replies speak through ElevenLabs (or Cartesia) when a key is configured (`ELEVENLABS_API_KEY` in `.env.local`), with browser TTS as fallback. Drop a Tavus-generated `public/companion.mp4` to give the companion a face on the voice screen.
 
 ## Run it
 ```bash

@@ -11,6 +11,7 @@ export function getDB(): DB {
   if (cache) return cache;
   if (fs.existsSync(DB_PATH)) {
     cache = JSON.parse(fs.readFileSync(DB_PATH, "utf8")) as DB;
+    if (!cache.lessons) cache.lessons = []; // migration for pre-learning snapshots
     return cache;
   }
   cache = buildSeed();

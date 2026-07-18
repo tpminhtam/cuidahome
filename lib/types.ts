@@ -163,6 +163,18 @@ export interface PreVisitReport {
   question_for_doctor: string;
 }
 
+// Continual learning via agentic memory: after each check-in a reflection pass
+// distills reusable lessons. Visible + curatable by the family (human-in-the-loop);
+// urgent clinical thresholds never self-modify.
+export interface Lesson {
+  id: string;
+  ts: string;
+  scope: "language" | "baseline" | "routine" | "preference";
+  text: string;
+  source: "reflection" | "seed";
+  caregiverId?: string;
+}
+
 export interface Thresholds {
   bp: { sysHigh: number; sysLow: number; diaHigh: number; diaLow: number };
   glucose: { low: number; high: number };
@@ -192,4 +204,5 @@ export interface DB {
   reports: Report[];
   portalOutbox: PortalMessage[];
   portalRuns: PortalRun[];
+  lessons: Lesson[];
 }

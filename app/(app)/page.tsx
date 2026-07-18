@@ -59,6 +59,17 @@ export default function Home() {
         </section>
       )}
 
+      {/* continual learning — the memory panel */}
+      {(state.lessons?.length ?? 0) > 0 && (
+        <Link href="/learning" className="card p-3 flex items-center gap-2.5">
+          <span className="text-xl">🧠</span>
+          <span className="text-sm font-semibold flex-1">
+            {es ? "Aprendido de sus chequeos" : "Learned from your check-ins"}
+          </span>
+          <span className="chip">{state.lessons.length}</span>
+        </Link>
+      )}
+
       {/* quick log grid */}
       <section>
         <p className="text-xs font-bold uppercase tracking-wide text-muted mb-2">

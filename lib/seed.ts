@@ -199,5 +199,19 @@ export function buildSeed(): DB {
     reports: [],
     portalOutbox: [],
     portalRuns: [],
+    lessons: [
+      {
+        id: "l1", ts: d(6, 10), scope: "language", source: "seed", caregiverId: "u_maria",
+        text: "When María says he is \"pesado\" she means drowsy/sluggish — log as fatigue, not weight.",
+      },
+      {
+        id: "l2", ts: d(4, 9), scope: "routine", source: "seed", caregiverId: "u_tam",
+        text: "Tam checks BP mornings after breakfast; María checks evenings — attribute times accordingly when they say \"this morning/tonight\".",
+      },
+      {
+        id: "l3", ts: d(1, 22), scope: "baseline", source: "seed",
+        text: "His BP has run 98–114 systolic since hydrochlorothiazide started — readings there are his current normal; still log, don't alarm.",
+      },
+    ],
   };
 }

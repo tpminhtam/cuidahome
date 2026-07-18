@@ -42,6 +42,7 @@ export default function VoicePage() {
   const [turns, setTurns] = useState<Turn[]>([]);
   const [typed, setTyped] = useState("");
   const [err, setErr] = useState<string | null>(null);
+  const [avatarOk, setAvatarOk] = useState(true); // hides itself if public/companion.mp4 is absent
 
   const recRef = useRef<SpeechRecognitionLike | null>(null);
   const finalRef = useRef("");
@@ -57,9 +58,36 @@ export default function VoicePage() {
     scrollRef.current?.scrollTo({ top: 99999, behavior: "smooth" });
   }, [turns, interim]);
 
-  function speak(text: string) {
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  function stopSpeaking() {
+    window.speechSynthesis?.cancel();
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current = null;
+    }
+  }
+
+  async function speak(text: string) {
+    stopSpeaking();
+    // neural voice via /api/tts (ElevenLabs/Cartesia); browser voice as fallback
     try {
-      window.speechSynthesis.cancel();
+      const res = await fetch("/api/tts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text, lang: effLang }),
+      });
+      if (res.ok && res.status !== 204) {
+        const blob = await res.blob();
+        const audio = new Audio(URL.createObjectURL(blob));
+        audioRef.current = audio;
+        await audio.play();
+        return;
+      }
+    } catch {
+      /* fall through to browser voice */
+    }
+    try {
       const u = new SpeechSynthesisUtterance(text);
       u.lang = SPEECH_LANG[effLang];
       u.rate = 1.02;
@@ -118,7 +146,7 @@ export default function VoicePage() {
       setErr(es ? "Este navegador no soporta dictado — usa Chrome, o escribe abajo." : "This browser doesn't support speech — use Chrome, or type below.");
       return;
     }
-    window.speechSynthesis?.cancel();
+    stopSpeaking();
     const rec = new Ctor();
     rec.lang = SPEECH_LANG[effLang];
     rec.continuous = true;
@@ -173,6 +201,22 @@ export default function VoicePage() {
       </div>
 
       <div ref={scrollRef} className="flex-1 overflow-y-auto space-y-2 py-1" style={{ minHeight: 220 }}>
+        {avatarOk && turns.length === 0 && !interim && (
+          <div className="card overflow-hidden">
+            <video
+              src={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/companion.mp4`}
+              controls
+              playsInline
+              preload="metadata"
+              className="w-full"
+              style={{ maxHeight: 200, background: "#111" }}
+              onError={() => setAvatarOk(false)}
+            />
+            <p className="text-[10px] text-muted px-3 py-1.5">
+              {es ? "Tu acompañante de CuidaHome" : "Your CuidaHome companion"} · Tavus avatar
+            </p>
+          </div>
+        )}
         {turns.length === 0 && !interim && (
           <div className="card p-4 text-sm text-muted leading-relaxed">
             {es ? (

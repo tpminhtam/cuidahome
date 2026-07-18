@@ -68,6 +68,8 @@ Speaking with: ${caregiverName} (speaking ${LANG_NAME[lang] ?? "English"}). Toda
 MEDICATIONS: ${p.medications.map((m) => m.name + (m.startedRecently ? " (NEW)" : "")).join(", ")}.
 CONTEXT FROM LAST DOCTOR VISIT: ${p.lastVisitNote}
 ALERT THRESHOLDS: BP high ${p.thresholds.bp.sysHigh}/${p.thresholds.bp.diaHigh}, BP low ${p.thresholds.bp.sysLow}/${p.thresholds.bp.diaLow}, glucose <${p.thresholds.glucose.low} or >${p.thresholds.glucose.high}.
+LEARNED CONTEXT (distilled from previous check-ins — apply automatically):
+${db.lessons.slice(-12).map((l) => `- [${l.scope}] ${l.text}`).join("\n") || "- (nothing yet)"}
 LAST ENTRIES:\n${recent}
 
 RULES
@@ -159,5 +161,62 @@ export async function POST(req: NextRequest) {
     convo.push({ role: "user", content: results });
   }
 
+  // continual learning: fire-and-forget reflection distills reusable lessons
+  // from this exchange into per-family memory (visible + curatable in /learning)
+  reflect(convo, caregiver.id).catch(() => {});
+
   return Response.json({ reply: replyText, entries: created, flags, messages: convo });
+}
+
+async function reflect(convo: Anthropic.MessageParam[], caregiverId: string) {
+  const client = getClient();
+  const db = getDB();
+  const transcript = convo
+    .map((m) => {
+      const content = typeof m.content === "string"
+        ? m.content
+        : m.content.filter((b) => b.type === "text").map((b) => (b as Anthropic.TextBlockParam).text).join(" ");
+      return content ? `${m.role}: ${content}` : "";
+    })
+    .filter(Boolean)
+    .join("\n");
+
+  const res = await client.messages.create({
+    model: MODEL,
+    max_tokens: 700,
+    system: `You are CuidaHome's reflection step — the continual-learning pass that runs after each caregiver check-in. Distill AT MOST 2 genuinely reusable lessons that would make FUTURE check-ins better. Good lessons: personal phrases and what they mean (keep the original-language phrase), the patient's evolving baselines, household routines, caregiver preferences. Bad lessons: one-off facts already captured in the log, restatements of existing lessons, medical advice. Most exchanges yield ZERO new lessons — return an empty list unless something is truly reusable.
+
+EXISTING LESSONS (never repeat or rephrase these):
+${db.lessons.map((l) => `- ${l.text}`).join("\n") || "- none"}`,
+    messages: [{ role: "user", content: `Check-in transcript:\n${transcript}` }],
+    output_config: {
+      format: {
+        type: "json_schema",
+        schema: {
+          type: "object", additionalProperties: false, required: ["lessons"],
+          properties: {
+            lessons: {
+              type: "array",
+              items: {
+                type: "object", additionalProperties: false, required: ["scope", "text"],
+                properties: {
+                  scope: { type: "string", enum: ["language", "baseline", "routine", "preference"] },
+                  text: { type: "string", description: "≤30 words, self-contained, useful in future check-ins" },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  });
+
+  const block = res.content.find((b) => b.type === "text");
+  if (!block || block.type !== "text") return;
+  const out = JSON.parse(block.text) as { lessons: { scope: "language" | "baseline" | "routine" | "preference"; text: string }[] };
+  for (const l of (out.lessons ?? []).slice(0, 2)) {
+    db.lessons.push({ id: uid("l"), ts: new Date().toISOString(), scope: l.scope, text: l.text, source: "reflection", caregiverId });
+  }
+  if (db.lessons.length > 30) db.lessons = db.lessons.slice(-30);
+  if (out.lessons?.length) persist();
 }
