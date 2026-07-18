@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import AvatarBubble from "@/components/AvatarBubble";
 import EntryCard from "@/components/EntryCard";
 import { useApp } from "@/components/useApp";
 import { Entry, Flag, Lang } from "@/lib/types";
@@ -43,6 +44,7 @@ export default function VoicePage() {
   const [typed, setTyped] = useState("");
   const [err, setErr] = useState<string | null>(null);
   const [avatarOk, setAvatarOk] = useState(true); // hides itself if public/companion.mp4 is absent
+  const [speaking, setSpeaking] = useState(false); // drives the avatar's motion
 
   const recRef = useRef<SpeechRecognitionLike | null>(null);
   const finalRef = useRef("");
@@ -66,11 +68,13 @@ export default function VoicePage() {
       audioRef.current.pause();
       audioRef.current = null;
     }
+    setSpeaking(false);
   }
 
   async function speak(text: string) {
     stopSpeaking();
-    // neural voice via /api/tts (ElevenLabs/Cartesia); browser voice as fallback
+    // neural voice via /api/tts (ElevenLabs/Cartesia); browser voice as fallback.
+    // `speaking` animates the avatar while the reply audio plays.
     try {
       const res = await fetch("/api/tts", {
         method: "POST",
@@ -81,7 +85,10 @@ export default function VoicePage() {
         const blob = await res.blob();
         const audio = new Audio(URL.createObjectURL(blob));
         audioRef.current = audio;
+        audio.onended = () => setSpeaking(false);
+        audio.onerror = () => setSpeaking(false);
         await audio.play();
+        setSpeaking(true);
         return;
       }
     } catch {
@@ -91,7 +98,9 @@ export default function VoicePage() {
       const u = new SpeechSynthesisUtterance(text);
       u.lang = SPEECH_LANG[effLang];
       u.rate = 1.02;
+      u.onend = () => setSpeaking(false);
       window.speechSynthesis.speak(u);
+      setSpeaking(true);
     } catch {
       /* no TTS available */
     }
@@ -200,23 +209,17 @@ export default function VoicePage() {
         </div>
       </div>
 
-      <div ref={scrollRef} className="flex-1 overflow-y-auto space-y-2 py-1" style={{ minHeight: 220 }}>
-        {avatarOk && turns.length === 0 && !interim && (
-          <div className="card overflow-hidden">
-            <video
-              src={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/companion.mp4`}
-              controls
-              playsInline
-              preload="metadata"
-              className="w-full"
-              style={{ maxHeight: 200, background: "#111" }}
-              onError={() => setAvatarOk(false)}
-            />
-            <p className="text-[10px] text-muted px-3 py-1.5">
-              {es ? "Tu acompañante de CuidaHome" : "Your CuidaHome companion"} · Tavus avatar
-            </p>
-          </div>
-        )}
+      {/* the companion is always present; she moves while speaking */}
+      {avatarOk && (
+        <AvatarBubble
+          src={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/companion.mp4`}
+          speaking={speaking}
+          height={140}
+          onMissing={() => setAvatarOk(false)}
+        />
+      )}
+
+      <div ref={scrollRef} className="flex-1 overflow-y-auto space-y-2 py-1" style={{ minHeight: 160 }}>
         {turns.length === 0 && !interim && (
           <div className="card p-4 text-sm text-muted leading-relaxed">
             {es ? (
